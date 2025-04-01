@@ -1,4 +1,4 @@
-name: ✅ Build Test
+name: ✅ Backend Build Test
 run-name: ${{ github.actor }} is Build Test  🚀
 on:
   push:
@@ -40,6 +40,7 @@ jobs:
 
       - name: Make application.yml
         run: |
+          mkdir -p ./src/main/resources
           cd ./src/main/resources
           echo "${{ secrets.APPLICATION_YML }}" | base64 -d > application.yml
 

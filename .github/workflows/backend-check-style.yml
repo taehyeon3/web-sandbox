@@ -1,4 +1,4 @@
-name: 📝 Check Style
+name: 📝 Backend Check Style
 run-name: ${{ github.actor }} is Check Style 🚀
 on:
   push:
