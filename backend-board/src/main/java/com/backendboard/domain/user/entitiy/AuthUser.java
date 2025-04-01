@@ -1,6 +1,7 @@
-package com.backendboard.entity;
+package com.backendboard.domain.user.entitiy;
 
-import com.backendboard.entity.type.UserRole;
+import com.backendboard.domain.user.entitiy.type.UserRole;
+import com.backendboard.global.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,7 +29,7 @@ public class AuthUser extends BaseEntity {
 	private String password;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false, columnDefinition = "VARCHAR(20)")
+	@Column(nullable = false, columnDefinition = "VARCHAR(100)")
 	private UserRole role;
 
 	private boolean status;

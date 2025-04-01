@@ -1,4 +1,6 @@
-package com.backendboard.entity;
+package com.backendboard.domain.user.entitiy;
+
+import com.backendboard.global.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

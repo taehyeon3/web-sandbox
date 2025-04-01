@@ -1,4 +1,4 @@
-package com.backendboard.entity.type;
+package com.backendboard.domain.user.entitiy.type;
 
 import lombok.Getter;
 
