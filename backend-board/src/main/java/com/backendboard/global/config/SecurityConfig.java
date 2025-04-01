@@ -12,6 +12,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.backendboard.global.security.filter.JwtFilter;
+import com.backendboard.global.security.filter.LoginFilter;
+import com.backendboard.global.security.service.CustomUserDetailsService;
+import com.backendboard.global.util.JwtUtil;
+
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -19,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	private final AuthenticationConfiguration authenticationConfiguration;
+	private final CustomUserDetailsService customUserDetailsService;
+	private final JwtUtil jwtUtil;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,6 +38,9 @@ public class SecurityConfig {
 				.permitAll()
 				.anyRequest()
 				.authenticated())
+			.addFilterBefore(new JwtFilter(customUserDetailsService, jwtUtil), LoginFilter.class)
+			.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
+				UsernamePasswordAuthenticationFilter.class)
 			.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.build();
 	}
