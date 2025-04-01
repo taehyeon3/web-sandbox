@@ -23,15 +23,15 @@ class AuthUserRepositoryTest {
 		@Test
 		@DisplayName("username이 중복이면 true 반환")
 		void returnsTrueWhenUsernameExists() {
-			//Given
+			//given
 			String username = "potato";
 			AuthUser authUser = new AuthUser(username, "1234", UserRole.USER);
 			authUserRepository.save(authUser);
 
-			//When
+			//when
 			boolean exists = authUserRepository.existsByUsername(username);
 
-			//Then
+			//then
 			Assertions.assertThat(exists).isTrue();
 		}
 	}

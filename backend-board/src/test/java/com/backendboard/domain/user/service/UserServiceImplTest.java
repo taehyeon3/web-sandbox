@@ -61,7 +61,7 @@ class UserServiceImplTest {
 		@Test
 		@DisplayName("회원가입 요청 성공")
 		void success() {
-			// Given
+			// given
 			when(userRepository.existsByNickname(anyString())).thenReturn(false);
 			when(authUserRepository.existsByUsername(anyString())).thenReturn(false);
 			when(bCryptPasswordEncoder.encode(anyString())).thenReturn("encoded_password");
@@ -69,10 +69,10 @@ class UserServiceImplTest {
 			when(userRepository.save(any(User.class))).thenReturn(user);
 			when(authUserRepository.save(any(AuthUser.class))).thenReturn(authUser);
 
-			// When
+			// when
 			JoinResponse response = userService.joinProcess(joinRequest);
 
-			// Then
+			// then
 			verify(userRepository).existsByNickname("testNick");
 			verify(authUserRepository).existsByUsername("testId");
 			verify(bCryptPasswordEncoder).encode("1234");
@@ -85,10 +85,10 @@ class UserServiceImplTest {
 		@Test
 		@DisplayName("중복된 아이디가 있으면 예외 발생")
 		void throwsExceptionWhenIdDuplicated() {
-			// Given
+			// given
 			when(authUserRepository.existsByUsername(anyString())).thenReturn(true);
 
-			// When & Then
+			// when & then
 			CustomException exception = assertThrows(CustomException.class,
 				() -> userService.joinProcess(joinRequest));
 
@@ -102,11 +102,11 @@ class UserServiceImplTest {
 		@Test
 		@DisplayName("중복된 닉네임이 있으면 예외 발생")
 		void throwsExceptionWhenNicknameDuplicated() {
-			// Given
+			// given
 			when(authUserRepository.existsByUsername(anyString())).thenReturn(false);
 			when(userRepository.existsByNickname(anyString())).thenReturn(true);
 
-			// When & Then
+			// when & then
 			CustomException exception = assertThrows(CustomException.class,
 				() -> userService.joinProcess(joinRequest));
 
@@ -125,11 +125,11 @@ class UserServiceImplTest {
 		@Test
 		@DisplayName("중복된 닉네임 검증 시 예외 발생")
 		void validateDuplicationNickname() {
-			// Given
+			// given
 			String nickname = "testNick";
 			when(userRepository.existsByNickname(nickname)).thenReturn(true);
 
-			// When & Then
+			// when & then
 			CustomException exception = assertThrows(CustomException.class,
 				() -> userService.validateDuplicationNickname(nickname));
 
@@ -139,11 +139,11 @@ class UserServiceImplTest {
 		@Test
 		@DisplayName("중복된 아이디 검증 시 예외 발생")
 		void validateDuplicationId() {
-			// Given
+			// given
 			String loginId = "testId";
 			when(authUserRepository.existsByUsername(loginId)).thenReturn(true);
 
-			// When & Then
+			// when & then
 			CustomException exception = assertThrows(CustomException.class,
 				() -> userService.validateDuplicationId(loginId));
 

@@ -18,13 +18,17 @@ public class JoinResponse {
 	@Schema(description = "로그인 아이디", example = "user")
 	private String loginId;
 
+	@Schema(description = "유저의 이름", example = "감자")
+	private String username;
+
 	@Schema(description = "닉네임", example = "배고픈감자")
 	private String nickname;
 
 	@Builder
-	private JoinResponse(Long id, String loginId, String nickname) {
+	private JoinResponse(Long id, String loginId, String username, String nickname) {
 		this.id = id;
 		this.loginId = loginId;
+		this.username = username;
 		this.nickname = nickname;
 	}
 
@@ -32,6 +36,7 @@ public class JoinResponse {
 		return builder()
 			.id(user.getId())
 			.loginId(user.getAuthUser().getUsername())
+			.username(user.getUsername())
 			.nickname(user.getNickname())
 			.build();
 	}

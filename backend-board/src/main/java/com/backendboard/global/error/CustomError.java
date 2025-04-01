@@ -13,8 +13,7 @@ public enum CustomError {
 
 	//유저 에러
 	USER_DUPLICATION_ID(HttpStatus.FORBIDDEN, "UR100", "중복된 아이디 입니다."),
-	USER_DUPLICATION_NICKNAME(HttpStatus.FORBIDDEN, "UR101", "중복된 닉네임 입니다."),
-	USER_NOT_MATCH(HttpStatus.FORBIDDEN, "UR102", "작성자가 일치하지 않습니다.");
+	USER_DUPLICATION_NICKNAME(HttpStatus.FORBIDDEN, "UR101", "중복된 닉네임 입니다.");
 
 	private final HttpStatus status;
 	private final String code;
