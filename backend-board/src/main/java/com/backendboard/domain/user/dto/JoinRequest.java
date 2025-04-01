@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class JoinRequest {
+
 	@Schema(description = "로그인 아이디", example = "user")
 	@NotBlank
 	@Size(max = 30)
@@ -30,4 +32,12 @@ public class JoinRequest {
 	@NotBlank
 	@Size(max = 30)
 	private String nickname;
+
+	@Builder
+	private JoinRequest(String loginId, String password, String username, String nickname) {
+		this.loginId = loginId;
+		this.password = password;
+		this.username = username;
+		this.nickname = nickname;
+	}
 }
