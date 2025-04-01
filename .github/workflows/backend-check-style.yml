@@ -1,0 +1,30 @@
+name: 📝 Backend Check Style
+run-name: ${{ github.actor }} is Check Style 🚀
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+defaults:
+  run:
+    working-directory: ./backend-board
+
+permissions:
+  contents: read
+
+jobs:
+  check-style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: Main checkstyle
+        run: ./gradlew --console verbose clean checkstyleMain
+      - name: ️Test checkstyle
+        run: ./gradlew --console verbose clean checkstyleTest
