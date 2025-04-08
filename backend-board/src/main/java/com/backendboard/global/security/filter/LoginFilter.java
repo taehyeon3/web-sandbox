@@ -15,6 +15,7 @@ import com.backendboard.global.security.dto.CustomUserDetails;
 import com.backendboard.global.util.JwtUtil;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +48,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 		GrantedAuthority auth = iterator.next();
 		String role = auth.getAuthority();
 
-		String token = jwtUtil.createToken(username, role);
-		response.addHeader("Authorization", "Bearer " + token);
+		String accessToken = jwtUtil.createAccessToken(username, role);
+		String refreshToken = jwtUtil.createRefreshToken(username, role);
+
+		response.addHeader("Authorization", "Bearer " + accessToken);
+		response.addCookie(createCookie("refresh", refreshToken));
+		response.setStatus(HttpStatus.OK.value());
 	}
 
 	//로그인 실패
@@ -56,5 +61,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException failed) {
 		response.setStatus(HttpStatus.UNAUTHORIZED.value());
+	}
+
+	private Cookie createCookie(String key, String value) {
+		Cookie cookie = new Cookie(key, value);
+		cookie.setMaxAge(24 * 60 * 60);
+		cookie.setHttpOnly(true);
+		return cookie;
 	}
 }
