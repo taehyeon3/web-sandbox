@@ -19,7 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "회원", description = "회원 관련 API")
+@Tag(name = "인증", description = "인증 관련 API")
 @RestController
 @RequiredArgsConstructor
 public class AuthController {

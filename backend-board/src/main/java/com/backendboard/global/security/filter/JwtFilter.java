@@ -31,18 +31,23 @@ public class JwtFilter extends OncePerRequestFilter {
 		throws ServletException, IOException {
 
 		String authorization = request.getHeader(AUTHORIZATION);
-		System.out.println("authorization = " + authorization);
 
-		if (jwtUtil.isBearerToken(authorization)) {
+		if (!jwtUtil.isBearerToken(authorization)) {
 			log.info("잘못된 토큰");
 			filterChain.doFilter(request, response);
 			return;
 		}
 
 		String token = jwtUtil.getToken(authorization);
+
+		if (!jwtUtil.getType(token).equals("access")) {
+			log.info("access 토큰이 아님");
+			filterChain.doFilter(request, response);
+			return;
+		}
 		if (jwtUtil.isExpired(token)) {
 			log.info("토큰 만료");
-			filterChain.doFilter(request, response);
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			return;
 		}
 
