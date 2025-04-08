@@ -13,6 +13,7 @@ import com.backendboard.domain.user.repository.AuthUserRepository;
 import com.backendboard.domain.user.repository.UserRepository;
 import com.backendboard.global.error.CustomError;
 import com.backendboard.global.error.CustomException;
+import com.backendboard.global.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +23,21 @@ public class AuthServiceImpl implements AuthService {
 	private final UserRepository userRepository;
 	private final AuthUserRepository authUserRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final JwtUtil jwtUtil;
+
+	@Override
+	public String reissueProcess(String refreshToken) {
+		validateRefreshToken(refreshToken);
+		String username = jwtUtil.getUsername(refreshToken);
+		String role = jwtUtil.getRole(refreshToken);
+		return jwtUtil.createAccessToken(username, role);
+	}
+
+	private void validateRefreshToken(String refreshToken) {
+		if (jwtUtil.getType(refreshToken).equals("refresh") || jwtUtil.isExpired(refreshToken)) {
+			throw new CustomException(CustomError.AUTH_INVALID_TOKEN);
+		}
+	}
 
 	@Transactional
 	@Override
