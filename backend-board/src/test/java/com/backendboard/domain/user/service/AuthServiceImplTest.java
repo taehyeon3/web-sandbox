@@ -25,7 +25,7 @@ import com.backendboard.global.error.CustomError;
 import com.backendboard.global.error.CustomException;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceImplTest {
+class AuthServiceImplTest {
 	@Mock
 	private UserRepository userRepository;
 
@@ -36,7 +36,7 @@ class UserServiceImplTest {
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@InjectMocks
-	private UserServiceImpl userService;
+	private AuthServiceImpl userService;
 
 	@Nested
 	@DisplayName("회원가입 프로세스 테스트")

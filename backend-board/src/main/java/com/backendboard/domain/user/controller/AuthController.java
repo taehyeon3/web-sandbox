@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backendboard.domain.user.dto.JoinRequest;
 import com.backendboard.domain.user.dto.JoinResponse;
-import com.backendboard.domain.user.service.UserService;
+import com.backendboard.domain.user.service.AuthService;
 import com.backendboard.global.error.dto.ErrorResponse;
 
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,8 +22,8 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "회원", description = "회원 관련 API")
 @RestController
 @RequiredArgsConstructor
-public class UserController {
-	private final UserService userService;
+public class AuthController {
+	private final AuthService authService;
 
 	@ApiResponses({
 		@ApiResponse(responseCode = "201", description = "201 성공",
@@ -35,7 +35,7 @@ public class UserController {
 	})
 	@PostMapping("/join")
 	public ResponseEntity<JoinResponse> join(@RequestBody @Valid JoinRequest request) {
-		JoinResponse response = userService.joinProcess(request);
+		JoinResponse response = authService.joinProcess(request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 }
