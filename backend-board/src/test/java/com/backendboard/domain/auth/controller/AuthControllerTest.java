@@ -1,4 +1,4 @@
-package com.backendboard.domain.user.controller;
+package com.backendboard.domain.auth.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -14,8 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.backendboard.domain.user.UserMockData;
-import com.backendboard.domain.user.dto.JoinRequest;
+import com.backendboard.domain.auth.UserMockData;
+import com.backendboard.domain.auth.dto.JoinRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest

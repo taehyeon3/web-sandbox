@@ -32,8 +32,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		String authorization = request.getHeader(AUTHORIZATION);
 
-		if (!jwtUtil.isBearerToken(authorization)) {
-			log.info("잘못된 토큰");
+		if (jwtUtil.isNotBearerToken(authorization)) {
+			log.debug("JwtFilter : 잘못된 토큰");
 			filterChain.doFilter(request, response);
 			return;
 		}
@@ -41,12 +41,12 @@ public class JwtFilter extends OncePerRequestFilter {
 		String token = jwtUtil.getToken(authorization);
 
 		if (!jwtUtil.getType(token).equals("access")) {
-			log.info("access 토큰이 아님");
+			log.debug("JwtFilter : access 토큰이 아님");
 			filterChain.doFilter(request, response);
 			return;
 		}
 		if (jwtUtil.isExpired(token)) {
-			log.info("토큰 만료");
+			log.debug("JwtFilter : 토큰 만료");
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			return;
 		}
@@ -58,16 +58,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		SecurityContextHolder.getContext().setAuthentication(authToken);
 		filterChain.doFilter(request, response);
-	}
-
-	@Override
-	protected boolean shouldNotFilter(HttpServletRequest request) {
-		String path = request.getServletPath();
-		return path.equals("/login")
-			|| path.equals("/join")
-			|| path.startsWith("/swagger-ui")
-			|| path.startsWith("/swagger-resources")
-			|| path.startsWith("/v3/api-docs");
 	}
 }
 

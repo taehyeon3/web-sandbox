@@ -1,6 +1,7 @@
-package com.backendboard.domain.user.entitiy;
+package com.backendboard.domain.auth.entitiy;
 
-import com.backendboard.domain.user.entitiy.type.UserRole;
+import com.backendboard.domain.auth.entitiy.type.UserRole;
+import com.backendboard.domain.user.entitiy.User;
 import com.backendboard.global.entity.BaseEntity;
 
 import jakarta.persistence.Column;

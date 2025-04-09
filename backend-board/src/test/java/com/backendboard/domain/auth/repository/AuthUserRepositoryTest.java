@@ -1,4 +1,4 @@
-package com.backendboard.domain.user.repository;
+package com.backendboard.domain.auth.repository;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -7,10 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.security.test.context.support.WithMockUser;
 
-import com.backendboard.domain.user.entitiy.AuthUser;
-import com.backendboard.domain.user.entitiy.type.UserRole;
+import com.backendboard.domain.auth.entitiy.AuthUser;
+import com.backendboard.domain.auth.entitiy.type.UserRole;
 
+@WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class AuthUserRepositoryTest {

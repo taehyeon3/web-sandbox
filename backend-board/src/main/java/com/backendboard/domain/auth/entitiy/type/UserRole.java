@@ -1,4 +1,4 @@
-package com.backendboard.domain.user.entitiy.type;
+package com.backendboard.domain.auth.entitiy.type;
 
 import lombok.Getter;
 

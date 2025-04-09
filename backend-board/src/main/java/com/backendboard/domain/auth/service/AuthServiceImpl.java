@@ -1,19 +1,21 @@
-package com.backendboard.domain.user.service;
+package com.backendboard.domain.auth.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.backendboard.domain.user.dto.JoinRequest;
-import com.backendboard.domain.user.dto.JoinResponse;
-import com.backendboard.domain.user.entitiy.AuthUser;
+import com.backendboard.domain.auth.dto.JoinRequest;
+import com.backendboard.domain.auth.dto.JoinResponse;
+import com.backendboard.domain.auth.dto.RefreshTokenDto;
+import com.backendboard.domain.auth.entitiy.AuthUser;
+import com.backendboard.domain.auth.entitiy.RefreshToken;
+import com.backendboard.domain.auth.entitiy.type.UserRole;
+import com.backendboard.domain.auth.repository.AuthUserRepository;
+import com.backendboard.domain.auth.repository.RefreshTokenRepository;
 import com.backendboard.domain.user.entitiy.User;
-import com.backendboard.domain.user.entitiy.type.UserRole;
-import com.backendboard.domain.user.repository.AuthUserRepository;
 import com.backendboard.domain.user.repository.UserRepository;
 import com.backendboard.global.error.CustomError;
 import com.backendboard.global.error.CustomException;
-import com.backendboard.global.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,21 +24,20 @@ import lombok.RequiredArgsConstructor;
 public class AuthServiceImpl implements AuthService {
 	private final UserRepository userRepository;
 	private final AuthUserRepository authUserRepository;
+	private final RefreshTokenRepository refreshTokenRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-	private final JwtUtil jwtUtil;
 
 	@Override
-	public String reissueProcess(String refreshToken) {
-		validateRefreshToken(refreshToken);
-		String username = jwtUtil.getUsername(refreshToken);
-		String role = jwtUtil.getRole(refreshToken);
-		return jwtUtil.createAccessToken(username, role);
+	public void deleteRefreshToken(String username) {
+		refreshTokenRepository.deleteById(username);
 	}
 
-	private void validateRefreshToken(String refreshToken) {
-		if (jwtUtil.getType(refreshToken).equals("refresh") || jwtUtil.isExpired(refreshToken)) {
-			throw new CustomException(CustomError.AUTH_INVALID_TOKEN);
-		}
+	@Override
+	public void saveRefreshToken(RefreshTokenDto tokenDto) {
+		RefreshToken refreshToken = RefreshTokenDto.toEntity(tokenDto);
+		refreshTokenRepository.save(refreshToken);
+		RefreshToken refreshToken1 = refreshTokenRepository.findById(tokenDto.getUsername()).orElseThrow();
+		System.out.println("refreshToken1 = " + refreshToken1);
 	}
 
 	@Transactional

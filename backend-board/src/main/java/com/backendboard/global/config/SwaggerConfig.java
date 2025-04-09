@@ -16,7 +16,7 @@ public class SwaggerConfig {
 	public GroupedOpenApi auth() {
 		return GroupedOpenApi.builder()
 			.group("인증 관련 API")
-			.pathsToMatch("/join")
+			.pathsToMatch("/join", "reissue")
 			.build();
 	}
 
@@ -39,7 +39,7 @@ public class SwaggerConfig {
 
 		return new OpenAPI()
 			.components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
-			.addServersItem(new Server().url("localhost").description("로컬 서버"))
+			.addServersItem(new Server().description("로컬 서버"))
 			.info(new Info()
 				.title("샌드박스 API 문서")
 				.description("샌드박스 API 명세서")

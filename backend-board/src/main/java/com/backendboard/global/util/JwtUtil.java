@@ -1,6 +1,7 @@
 package com.backendboard.global.util;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
@@ -9,8 +10,12 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.backendboard.global.error.CustomError;
+import com.backendboard.global.error.CustomException;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.Cookie;
 
 @Component
 public class JwtUtil {
@@ -98,7 +103,25 @@ public class JwtUtil {
 		return authorization.split(" ")[1];
 	}
 
-	public boolean isBearerToken(String authorization) {
+	public boolean isNotBearerToken(String authorization) {
 		return authorization == null || !authorization.startsWith("Bearer ");
+	}
+
+	public String extractedRefreshToken(Cookie[] cookies) {
+		if (cookies == null) {
+			throw new CustomException(CustomError.AUTH_NOT_FOUND_COOKIE);
+		}
+		return Arrays.stream(cookies)
+			.filter(cookie -> cookie.getName().equals("refresh"))
+			.map(Cookie::getValue)
+			.findFirst()
+			.orElseThrow(() -> new CustomException(CustomError.AUTH_NOT_FOUND_COOKIE));
+	}
+
+	public Cookie createRefreshCookie(String token) {
+		Cookie cookie = new Cookie("refresh", token);
+		cookie.setMaxAge((int)(expiredRefreshTokenTime / 1000));
+		cookie.setHttpOnly(true);
+		return cookie;
 	}
 }

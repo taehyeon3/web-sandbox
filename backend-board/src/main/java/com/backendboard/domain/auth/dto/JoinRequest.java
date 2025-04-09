@@ -1,4 +1,4 @@
-package com.backendboard.domain.user.dto;
+package com.backendboard.domain.auth.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
