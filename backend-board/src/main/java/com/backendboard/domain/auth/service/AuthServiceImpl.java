@@ -36,8 +36,11 @@ public class AuthServiceImpl implements AuthService {
 	public void saveRefreshToken(RefreshTokenDto tokenDto) {
 		RefreshToken refreshToken = RefreshTokenDto.toEntity(tokenDto);
 		refreshTokenRepository.save(refreshToken);
-		RefreshToken refreshToken1 = refreshTokenRepository.findById(tokenDto.getUsername()).orElseThrow();
-		System.out.println("refreshToken1 = " + refreshToken1);
+	}
+
+	@Override
+	public boolean isValidRefreshToken(String refreshToken) {
+		return refreshTokenRepository.existsById(refreshToken);
 	}
 
 	@Transactional

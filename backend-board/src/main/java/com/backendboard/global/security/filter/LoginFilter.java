@@ -11,6 +11,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.backendboard.domain.auth.dto.RefreshTokenDto;
+import com.backendboard.domain.auth.service.AuthService;
 import com.backendboard.global.security.dto.CustomUserDetails;
 import com.backendboard.global.util.JwtUtil;
 
@@ -23,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 	private final AuthenticationManager authenticationManager;
 	private final JwtUtil jwtUtil;
+	private final AuthService authService;
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws
@@ -49,7 +52,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 		String accessToken = jwtUtil.createAccessToken(username, role);
 		String refreshToken = jwtUtil.createRefreshToken(username, role);
+		RefreshTokenDto tokenDto = RefreshTokenDto.toDto(username, refreshToken);
 
+		authService.saveRefreshToken(tokenDto);
 		response.addHeader("Authorization", "Bearer " + accessToken);
 		response.addCookie(jwtUtil.createRefreshCookie(refreshToken));
 		response.setStatus(HttpStatus.OK.value());

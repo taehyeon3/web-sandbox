@@ -9,5 +9,7 @@ public interface AuthService {
 
 	void saveRefreshToken(RefreshTokenDto tokenDto);
 
-	void deleteRefreshToken(String username);
+	void deleteRefreshToken(String refreshToken);
+
+	boolean isValidRefreshToken(String refreshToken);
 }

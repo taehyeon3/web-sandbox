@@ -72,6 +72,7 @@ public class AuthController {
 	public ResponseEntity<Void> reissue(HttpServletRequest request, HttpServletResponse response) {
 		String refreshToken = jwtUtil.extractedRefreshToken(request.getCookies());
 
+		validateRefreshTokenFormat(refreshToken);
 		validateRefreshToken(refreshToken);
 		validateTokenExpiration(refreshToken);
 
@@ -83,6 +84,7 @@ public class AuthController {
 		response.setHeader("Authorization", "Bearer " + accessToken);
 		response.addCookie(jwtUtil.createRefreshCookie(newRefreshToken));
 		RefreshTokenDto tokenDto = RefreshTokenDto.toDto(username, newRefreshToken);
+		authService.deleteRefreshToken(refreshToken);
 		authService.saveRefreshToken(tokenDto);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -93,8 +95,14 @@ public class AuthController {
 		}
 	}
 
+	public void validateRefreshTokenFormat(String refreshToken) {
+		if (refreshToken == null || !jwtUtil.getType(refreshToken).equals("refresh")) {
+			throw new CustomException(CustomError.AUTH_INVALID_TOKEN);
+		}
+	}
+
 	public void validateRefreshToken(String refreshToken) {
-		if (!jwtUtil.getType(refreshToken).equals("refresh")) {
+		if (authService.isValidRefreshToken(refreshToken)) {
 			throw new CustomException(CustomError.AUTH_INVALID_TOKEN);
 		}
 	}

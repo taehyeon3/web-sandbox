@@ -10,13 +10,13 @@ import lombok.Getter;
 @RedisHash(value = "refreshToken", timeToLive = 43200)
 public class RefreshToken {
 	@Id
-	private String username;
-
 	private String refreshToken;
 
+	private String username;
+
 	@Builder
-	private RefreshToken(String username, String refreshToken) {
-		this.username = username;
+	private RefreshToken(String refreshToken, String username) {
 		this.refreshToken = refreshToken;
+		this.username = username;
 	}
 }

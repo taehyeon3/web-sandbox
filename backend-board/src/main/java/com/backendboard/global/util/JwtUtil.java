@@ -10,9 +10,6 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.backendboard.global.error.CustomError;
-import com.backendboard.global.error.CustomException;
-
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
@@ -109,19 +106,26 @@ public class JwtUtil {
 
 	public String extractedRefreshToken(Cookie[] cookies) {
 		if (cookies == null) {
-			throw new CustomException(CustomError.AUTH_NOT_FOUND_COOKIE);
+			return null;
 		}
 		return Arrays.stream(cookies)
 			.filter(cookie -> cookie.getName().equals("refresh"))
 			.map(Cookie::getValue)
 			.findFirst()
-			.orElseThrow(() -> new CustomException(CustomError.AUTH_NOT_FOUND_COOKIE));
+			.orElse(null);
 	}
 
 	public Cookie createRefreshCookie(String token) {
 		Cookie cookie = new Cookie("refresh", token);
 		cookie.setMaxAge((int)(expiredRefreshTokenTime / 1000));
 		cookie.setHttpOnly(true);
+		return cookie;
+	}
+
+	public Cookie deleteRefreshCookie() {
+		Cookie cookie = new Cookie("refresh", null);
+		cookie.setMaxAge(0);
+		cookie.setPath("/");
 		return cookie;
 	}
 }
