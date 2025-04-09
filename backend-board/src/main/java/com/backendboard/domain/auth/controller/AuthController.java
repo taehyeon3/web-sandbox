@@ -102,7 +102,7 @@ public class AuthController {
 	}
 
 	public void validateRefreshToken(String refreshToken) {
-		if (authService.isValidRefreshToken(refreshToken)) {
+		if (!authService.isValidRefreshToken(refreshToken)) {
 			throw new CustomException(CustomError.AUTH_INVALID_TOKEN);
 		}
 	}

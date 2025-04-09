@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.springframework.web.filter.GenericFilterBean;
 
-import com.backendboard.domain.auth.service.AuthService;
+import com.backendboard.global.security.service.RefreshTokenService;
 import com.backendboard.global.util.JwtUtil;
 
 import jakarta.servlet.FilterChain;
@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
 	private final JwtUtil jwtUtil;
-	private final AuthService authService;
+	private final RefreshTokenService refreshTokenService;
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -48,7 +48,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 			return;
 		}
 
-		if (!authService.isValidRefreshToken(refreshToken)) {
+		if (!refreshTokenService.isValidRefreshToken(refreshToken)) {
 			log.debug("CustomLogoutFilter : refreshToken이 유효하지 않음");
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return;
@@ -60,7 +60,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 			return;
 		}
 
-		authService.deleteRefreshToken(refreshToken);
+		refreshTokenService.deleteRefreshToken(refreshToken);
 		Cookie cookie = jwtUtil.deleteRefreshCookie();
 
 		response.addCookie(cookie);

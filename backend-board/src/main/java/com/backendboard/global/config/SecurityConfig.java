@@ -13,11 +13,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
-import com.backendboard.domain.auth.service.AuthService;
 import com.backendboard.global.security.filter.CustomLogoutFilter;
 import com.backendboard.global.security.filter.JwtFilter;
 import com.backendboard.global.security.filter.LoginFilter;
 import com.backendboard.global.security.service.CustomUserDetailsService;
+import com.backendboard.global.security.service.RefreshTokenService;
 import com.backendboard.global.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class SecurityConfig {
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final CustomUserDetailsService customUserDetailsService;
 	private final JwtUtil jwtUtil;
-	private final AuthService authService;
+	private final RefreshTokenService refreshTokenService;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,9 +43,10 @@ public class SecurityConfig {
 				.anyRequest()
 				.authenticated())
 			.addFilterBefore(new JwtFilter(customUserDetailsService, jwtUtil), LoginFilter.class)
-			.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, authService),
+			.addFilterAt(
+				new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenService),
 				UsernamePasswordAuthenticationFilter.class)
-			.addFilterBefore(new CustomLogoutFilter(jwtUtil, authService), LogoutFilter.class)
+			.addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenService), LogoutFilter.class)
 			.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.build();
 	}
