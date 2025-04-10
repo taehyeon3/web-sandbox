@@ -31,18 +31,23 @@ public class JwtFilter extends OncePerRequestFilter {
 		throws ServletException, IOException {
 
 		String authorization = request.getHeader(AUTHORIZATION);
-		System.out.println("authorization = " + authorization);
 
-		if (jwtUtil.isBearerToken(authorization)) {
-			log.info("잘못된 토큰");
+		if (jwtUtil.isNotBearerToken(authorization)) {
+			log.debug("JwtFilter : 잘못된 토큰");
 			filterChain.doFilter(request, response);
 			return;
 		}
 
 		String token = jwtUtil.getToken(authorization);
-		if (jwtUtil.isExpired(token)) {
-			log.info("토큰 만료");
+
+		if (!jwtUtil.getType(token).equals("access")) {
+			log.debug("JwtFilter : access 토큰이 아님");
 			filterChain.doFilter(request, response);
+			return;
+		}
+		if (jwtUtil.isExpired(token)) {
+			log.debug("JwtFilter : 토큰 만료");
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			return;
 		}
 
@@ -53,16 +58,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		SecurityContextHolder.getContext().setAuthentication(authToken);
 		filterChain.doFilter(request, response);
-	}
-
-	@Override
-	protected boolean shouldNotFilter(HttpServletRequest request) {
-		String path = request.getServletPath();
-		return path.equals("/login")
-			|| path.equals("/join")
-			|| path.startsWith("/swagger-ui")
-			|| path.startsWith("/swagger-resources")
-			|| path.startsWith("/v3/api-docs");
 	}
 }
 
