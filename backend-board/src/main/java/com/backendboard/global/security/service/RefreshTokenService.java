@@ -13,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 public class RefreshTokenService {
 	private final RefreshTokenRepository refreshTokenRepository;
 
-	public void deleteRefreshToken(String username) {
-		refreshTokenRepository.deleteById(username);
+	public void deleteRefreshToken(String refreshToken) {
+		refreshTokenRepository.delete(refreshToken);
 	}
 
 	public void saveRefreshToken(RefreshTokenDto tokenDto) {
@@ -23,6 +23,6 @@ public class RefreshTokenService {
 	}
 
 	public boolean isValidRefreshToken(String refreshToken) {
-		return refreshTokenRepository.existsById(refreshToken);
+		return refreshTokenRepository.exists(refreshToken);
 	}
 }

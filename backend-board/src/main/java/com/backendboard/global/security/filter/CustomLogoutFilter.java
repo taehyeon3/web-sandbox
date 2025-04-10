@@ -43,19 +43,19 @@ public class CustomLogoutFilter extends GenericFilterBean {
 		String refreshToken = jwtUtil.extractedRefreshToken(request.getCookies());
 
 		if (refreshToken == null || !jwtUtil.getType(refreshToken).equals("refresh")) {
-			log.debug("CustomLogoutFilter : refresh 토큰이 아님");
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			return;
-		}
-
-		if (!refreshTokenService.isValidRefreshToken(refreshToken)) {
-			log.debug("CustomLogoutFilter : refreshToken이 유효하지 않음");
+			log.debug("CustomLogoutFilter : refresh 토큰폼이 아님");
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
 
 		if (jwtUtil.isExpired(refreshToken)) {
 			log.debug("CustomLogoutFilter : refreshToken이 만료됨");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
+		if (!refreshTokenService.isValidRefreshToken(refreshToken)) {
+			log.debug("CustomLogoutFilter : refreshToken이 유효하지 않음");
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}

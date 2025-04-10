@@ -28,8 +28,8 @@ public class AuthServiceImpl implements AuthService {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Override
-	public void deleteRefreshToken(String username) {
-		refreshTokenRepository.deleteById(username);
+	public void deleteRefreshToken(String refreshToken) {
+		refreshTokenRepository.delete(refreshToken);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public boolean isValidRefreshToken(String refreshToken) {
-		return refreshTokenRepository.existsById(refreshToken);
+		return refreshTokenRepository.exists(refreshToken);
 	}
 
 	@Transactional
