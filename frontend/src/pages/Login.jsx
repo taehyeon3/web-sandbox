@@ -1,15 +1,17 @@
 // src/components/Login.jsx
 import React, {useState} from 'react';
 import {Alert, Button, Card, Col, Container, Form, Row} from 'react-bootstrap';
-import LogoLink from "./LogoLink.jsx";
+import LogoLink from "../components/LogoLink.jsx";
+import {useNavigate} from "react-router-dom";
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [validated, setValidated] = useState(false);
     const [showError, setShowError] = useState(false);
+    const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const form = event.currentTarget;
 
@@ -18,9 +20,26 @@ const Login = () => {
             setShowError(true);
         } else {
             console.log('로그인 시도:', {email, password});
+            const formData = new FormData();
+            formData.append('username', email);
+            formData.append('password', password);
+            // API 요청 보내기
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                body: formData
+                // FormData를 사용할 때는 Content-Type 헤더를 설정하지 않습니다.
+                // 브라우저가 자동으로 multipart/form-data로 설정합니다.
+            });
+            if (response.ok) {
+                console.log('로그인 성공:');
+                localStorage.setItem('user', JSON.stringify({email, name: '감자 사용자'}));
+                navigate('/');
+            } else {
+                console.error('로그인 실패');
+                setShowError(true);
+            }
             setShowError(false);
         }
-
         setValidated(true);
     };
 
@@ -92,7 +111,7 @@ const Login = () => {
                                     <a href="#" className="potato-link">비밀번호를 잊으셨나요?</a>
                                     <div className="mt-2">
                                         계정이 없으신가요?
-                                        <a href="/join" className="potato-link">회원가입</a>
+                                        <a href="/Join" className="potato-link">회원가입</a>
                                     </div>
                                 </div>
                             </Form>

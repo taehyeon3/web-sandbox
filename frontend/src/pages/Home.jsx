@@ -1,9 +1,10 @@
 import React from 'react';
 import {Button, Card, Col, Container, Row} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
-import LogoLink from "./LogoLink.jsx";
+import LogoLink from "../components/LogoLink.jsx";
 
-const Home = ({isLoggedIn}) => {
+const Home = () => {
+    const isLoggedIn = localStorage.getItem('user') !== null;
     return (
         <Container className="py-5">
             <Row className="justify-content-center">

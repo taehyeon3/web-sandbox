@@ -1,16 +1,20 @@
 // src/components/Join.jsx
 import React, {useState} from 'react';
 import {Alert, Button, Card, Col, Container, Form, Row} from 'react-bootstrap';
-import LogoLink from "./LogoLink.jsx";
+import LogoLink from "../components/LogoLink.jsx";
+import {useNavigate} from "react-router-dom";
 
 const Join = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [name, setName] = useState('');
+    const [nickname, setNickname] = useState('');
     const [validated, setValidated] = useState(false);
     const [showError, setShowError] = useState(false);
+    const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const form = event.currentTarget;
 
@@ -19,6 +23,30 @@ const Join = () => {
             setShowError(true);
         } else {
             console.log('회원가입 시도:', {email, password});
+            const userData = {
+                loginId: email,
+                password: password,
+                username: name,
+                nickname: nickname
+            };
+            // API 요청 보내기
+            const response = await fetch('/api/join', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('회원가입 성공:', data);
+                // 회원가입 성공 후 처리 (예: 로그인 페이지로 이동)
+                navigate('/login');
+            } else {
+                console.error('회원가입 실패');
+                setShowError(true);
+            }
             setShowError(false);
         }
 
@@ -89,6 +117,38 @@ const Join = () => {
                                     </Form.Control.Feedback>
                                 </Form.Group>
 
+                                <Form.Group className="mb-3" controlId="formName">
+                                    <Form.Label>이름</Form.Label>
+                                    <Form.Control
+                                        type="name"
+                                        placeholder="홍길동"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        required
+                                        minLength="1"
+                                        isInvalid={password !== confirmPassword}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        이름을 입력해주세요.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="formNickname">
+                                    <Form.Label>닉네임</Form.Label>
+                                    <Form.Control
+                                        type="nickname"
+                                        placeholder="감자"
+                                        value={nickname}
+                                        onChange={(e) => setNickname(e.target.value)}
+                                        required
+                                        minLength="1"
+                                        isInvalid={password !== confirmPassword}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        닉네임을 입력해주세요.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+
                                 <Button
                                     variant="primary"
                                     type="submit"
@@ -99,7 +159,7 @@ const Join = () => {
 
                                 <div className="text-center mt-3">
                                     이미 계정이 있으신가요?
-                                    <a href="/login" className="potato-link">로그인</a>
+                                    <a href="/Login" className="potato-link">로그인</a>
                                 </div>
                             </Form>
                         </Card.Body>
