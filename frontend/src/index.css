@@ -1,68 +1,130 @@
+/* src/App.css */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+    --potato-brown: #a67c52;
+    --potato-light-brown: #d4b996;
+    --potato-yellow: #f3d77d;
+    --potato-cream: #f8f0e0;
+    --potato-dark: #5d4037;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+    background-color: var(--potato-cream);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.potato-login-container,
+.potato-signup-container,
+.potato-home-container {
+    max-width: 500px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.potato-card,
+.potato-home-card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 8px 20px rgba(166, 124, 82, 0.2);
+    background-color: white;
+    padding: 30px;
+}
+
+.potato-logo {
+    margin-bottom: 15px;
+}
+
+.potato-title,
+.potato-home-title {
+    color: var(--potato-brown);
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 2.5rem;
+}
+
+.potato-subtitle,
+.potato-home-subtitle {
+    color: var(--potato-dark);
+    opacity: 0.8;
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+}
+
+.potato-button,
+.potato-home-button {
+    background-color: var(--potato-brown) !important;
+    border-color: var(--potato-brown) !important;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.potato-button:hover,
+.potato-button:focus,
+.potato-home-button:hover,
+.potato-home-button:focus {
+    background-color: var(--potato-dark) !important;
+    border-color: var(--potato-dark) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(93, 64, 55, 0.2);
+}
+
+.potato-link {
+    color: var(--potato-brown);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.potato-link:hover {
+    color: var(--potato-dark);
+    text-decoration: underline;
+}
+
+.potato-checkbox {
+    cursor: pointer;
+}
+
+.form-control:focus {
+    border-color: var(--potato-light-brown);
+    box-shadow: 0 0 0 0.25rem rgba(166, 124, 82, 0.25);
+}
+
+.potato-home-button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 576px) {
+    .potato-card,
+    .potato-home-card {
+        padding: 20px;
+    }
+
+    .potato-logo {
+        width: 80px;
+    }
+
+    .potato-title,
+    .potato-home-title {
+        font-size: 2rem;
+    }
+
+    .potato-subtitle,
+    .potato-home-subtitle {
+        font-size: 1rem;
+    }
+
+    .potato-home-button {
+        margin: 5px;
+        padding: 8px 16px;
+        font-size: 1rem;
+    }
 }
