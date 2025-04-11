@@ -1,5 +1,5 @@
 name: ✅ Backend Build Test
-run-name: ${{ github.actor }} is Build Test  🚀
+run-name: ${{ github.actor }} is Backend Build Test  🚀
 on:
   push:
     branches:
