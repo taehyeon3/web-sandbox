@@ -1,7 +1,7 @@
 // src/components/Login.jsx
 import React, {useState} from 'react';
 import {Alert, Button, Card, Col, Container, Form, Row} from 'react-bootstrap';
-import potatoLogo from '../assets/potato-logo.png';
+import LogoLink from "./LogoLink.jsx";
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -31,12 +31,7 @@ const Login = () => {
                     <Card className="potato-card">
                         <Card.Body>
                             <div className="text-center mb-4">
-                                <img
-                                    src={potatoLogo}
-                                    alt="감자 로고"
-                                    className="potato-logo"
-                                    width="120"
-                                />
+                                <LogoLink width="150"/>
                                 <h2 className="potato-title">로그인</h2>
                                 <p className="potato-subtitle">맛있는 감자의 세계에 오신 것을 환영합니다!</p>
                             </div>

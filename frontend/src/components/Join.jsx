@@ -1,7 +1,7 @@
 // src/components/Join.jsx
 import React, {useState} from 'react';
 import {Alert, Button, Card, Col, Container, Form, Row} from 'react-bootstrap';
-import potatoLogo from '../assets/potato-logo.png';
+import LogoLink from "./LogoLink.jsx";
 
 const Join = () => {
     const [email, setEmail] = useState('');
@@ -32,12 +32,7 @@ const Join = () => {
                     <Card className="potato-card">
                         <Card.Body>
                             <div className="text-center mb-4">
-                                <img
-                                    src={potatoLogo}
-                                    alt="감자 로고"
-                                    className="potato-logo"
-                                    width="120"
-                                />
+                                <LogoLink width="150"/>
                                 <h2 className="potato-title">회원가입</h2>
                                 <p className="potato-subtitle">맛있는 감자의 세계에 함께하세요!</p>
                             </div>

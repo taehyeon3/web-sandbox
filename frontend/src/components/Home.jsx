@@ -1,19 +1,14 @@
 import React from 'react';
 import {Button, Card, Col, Container, Row} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
-import potatoLogo from "../assets/potato-logo.png";
+import LogoLink from "./LogoLink.jsx";
 
 const Home = ({isLoggedIn}) => {
     return (
         <Container className="py-5">
             <Row className="justify-content-center">
                 <Col md={8} className="text-center">
-                    <img
-                        src={potatoLogo}
-                        alt="감자 로고"
-                        className="potato-logo"
-                        width="120"
-                    />
+                    <LogoLink width="150"/>
                     <h1 className="potato-title"> 🥔 감자 나라 🥔</h1>
                     <p className="potato-subtitle">
                         감자 월드는 감자를 사랑하는 모든 사람들을 위한 커뮤니티입니다.
