@@ -47,11 +47,24 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public CommentReadResponse getComment(Long commentId, Long authUserId) {
+	public CommentReadResponse getComment(Long commentId) {
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(() -> new CustomException(CustomError.COMMENT_NOT_FOUND));
+		User author = userRepository.findById(comment.getUserId())
+			.orElseThrow(() -> new CustomException(CustomError.USER_NOT_FOUND));
+		return CommentReadResponse.toDto(comment, author.getNickname());
+	}
+
+	@Transactional
+	@Override
+	public void deleteComment(Long commentId, Long authUserId) {
 		User user = userRepository.getByAuthUserId(authUserId);
 		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(() -> new CustomException(CustomError.COMMENT_NOT_FOUND));
-		return CommentReadResponse.toDto(comment, user.getNickname());
+
+		validateAuthor(comment, user);
+
+		comment.delete();
 	}
 
 	public void validateAuthor(Comment comment, User user) {

@@ -3,6 +3,7 @@ package com.backendboard.domain.comment.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -83,7 +84,7 @@ public class CommentController {
 
 	@Operation(
 		summary = "댓글 보기 API",
-		description = "댓글를 봅니다.",
+		description = "댓글을 봅니다.",
 		security = {@SecurityRequirement(name = "bearerAuth")}
 	)
 	@ApiResponses({
@@ -94,9 +95,27 @@ public class CommentController {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
 	@GetMapping("/{commentId}")
-	public ResponseEntity<CommentReadResponse> readComment(
-		@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long commentId) {
-		CommentReadResponse response = commentService.getComment(commentId, customUserDetails.getId());
+	public ResponseEntity<CommentReadResponse> readComment(@PathVariable Long commentId) {
+		CommentReadResponse response = commentService.getComment(commentId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+	@Operation(
+		summary = "댓글 삭제 API",
+		description = "댓글을 삭제합니다.",
+		security = {@SecurityRequirement(name = "bearerAuth")}
+	)
+	@ApiResponses({
+		@ApiResponse(responseCode = "204", description = "204 성공",
+			content = @Content(
+				mediaType = "application/json", schema = @Schema(implementation = CommentCreateResponse.class))),
+		@ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없습니다.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+	})
+	@DeleteMapping("/{commentId}")
+	public ResponseEntity<Void> deleteComment(
+		@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long commentId) {
+		commentService.deleteComment(commentId, customUserDetails.getId());
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }
