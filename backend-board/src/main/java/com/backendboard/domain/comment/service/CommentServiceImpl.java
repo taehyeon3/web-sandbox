@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.backendboard.domain.comment.dto.CommentCreateRequest;
 import com.backendboard.domain.comment.dto.CommentCreateResponse;
+import com.backendboard.domain.comment.dto.CommentReadResponse;
 import com.backendboard.domain.comment.dto.CommentUpdateRequest;
 import com.backendboard.domain.comment.dto.CommentUpdateResponse;
 import com.backendboard.domain.comment.entity.Comment;
@@ -27,17 +28,35 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public CommentCreateResponse createComment(CommentCreateRequest request, Long authUserId) {
 		User user = userRepository.getByAuthUserId(authUserId);
-		Comment comment = CommentCreateRequest.toEntity(request, user.getNickname());
+		Comment comment = CommentCreateRequest.toEntity(request, user.getId());
 		Comment saved = commentRepository.save(comment);
-		return CommentCreateResponse.toDto(saved);
+		return CommentCreateResponse.toDto(saved, user.getNickname());
 	}
 
 	@Transactional
 	@Override
-	public CommentUpdateResponse updateComment(CommentUpdateRequest request, Long commentId) {
+	public CommentUpdateResponse updateComment(CommentUpdateRequest request, Long commentId, Long authUserId) {
+		User user = userRepository.getByAuthUserId(authUserId);
 		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(() -> new CustomException(CustomError.COMMENT_NOT_FOUND));
+
+		validateAuthor(comment, user);
+
 		comment.updateContent(request.getContent());
-		return CommentUpdateResponse.toDto(comment);
+		return CommentUpdateResponse.toDto(comment, user.getNickname());
+	}
+
+	@Override
+	public CommentReadResponse getComment(Long commentId, Long authUserId) {
+		User user = userRepository.getByAuthUserId(authUserId);
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(() -> new CustomException(CustomError.COMMENT_NOT_FOUND));
+		return CommentReadResponse.toDto(comment, user.getNickname());
+	}
+
+	public void validateAuthor(Comment comment, User user) {
+		if (comment.getUserId() != user.getId()) {
+			throw new CustomException(CustomError.COMMENT_NOT_AUTHOR);
+		}
 	}
 }

@@ -27,11 +27,11 @@ public class CommentCreateRequest {
 		this.content = content;
 	}
 
-	public static Comment toEntity(CommentCreateRequest dto, String author) {
+	public static Comment toEntity(CommentCreateRequest dto, Long userId) {
 		return Comment.builder()
 			.postId(dto.postId)
 			.content(dto.content)
-			.author(author)
+			.userId(userId)
 			.build();
 	}
 }

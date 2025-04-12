@@ -29,12 +29,12 @@ public class CommentUpdateResponse {
 		this.content = content;
 	}
 
-	public static CommentUpdateResponse toDto(Comment comment) {
+	public static CommentUpdateResponse toDto(Comment comment, String author) {
 		return CommentUpdateResponse.builder()
 			.id(comment.getId())
 			.postId(comment.getPostId())
-			.author(comment.getAuthor())
 			.content(comment.getContent())
+			.author(author)
 			.build();
 	}
 }

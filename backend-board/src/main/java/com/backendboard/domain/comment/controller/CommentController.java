@@ -3,6 +3,7 @@ package com.backendboard.domain.comment.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backendboard.domain.comment.dto.CommentCreateRequest;
 import com.backendboard.domain.comment.dto.CommentCreateResponse;
+import com.backendboard.domain.comment.dto.CommentReadResponse;
 import com.backendboard.domain.comment.dto.CommentUpdateRequest;
 import com.backendboard.domain.comment.dto.CommentUpdateResponse;
 import com.backendboard.domain.comment.service.CommentService;
@@ -66,6 +68,8 @@ public class CommentController {
 				mediaType = "application/json", schema = @Schema(implementation = CommentCreateResponse.class))),
 		@ApiResponse(responseCode = "400", description = "잘못된 요청입니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+		@ApiResponse(responseCode = "403", description = "작성자가 아닙니다.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 		@ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없습니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
@@ -73,7 +77,26 @@ public class CommentController {
 	public ResponseEntity<CommentUpdateResponse> updateComment(
 		@AuthenticationPrincipal CustomUserDetails customUserDetails,
 		@RequestBody @Valid CommentUpdateRequest request, @PathVariable Long commentId) {
-		CommentUpdateResponse response = commentService.updateComment(request, commentId);
+		CommentUpdateResponse response = commentService.updateComment(request, commentId, customUserDetails.getId());
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+	@Operation(
+		summary = "댓글 보기 API",
+		description = "댓글를 봅니다.",
+		security = {@SecurityRequirement(name = "bearerAuth")}
+	)
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "200 성공",
+			content = @Content(
+				mediaType = "application/json", schema = @Schema(implementation = CommentCreateResponse.class))),
+		@ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없습니다.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+	})
+	@GetMapping("/{commentId}")
+	public ResponseEntity<CommentReadResponse> readComment(
+		@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long commentId) {
+		CommentReadResponse response = commentService.getComment(commentId, customUserDetails.getId());
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }

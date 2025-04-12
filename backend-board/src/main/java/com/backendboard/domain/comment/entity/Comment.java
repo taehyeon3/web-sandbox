@@ -24,7 +24,7 @@ public class Comment extends BaseEntity {
 	private Long postId;
 
 	@Column(nullable = false)
-	private String author;
+	private Long userId;
 
 	@Column(nullable = false, columnDefinition = "VARCHAR(1000)")
 	private String content;
@@ -33,17 +33,17 @@ public class Comment extends BaseEntity {
 	private boolean isDeleted;
 
 	@Builder
-	private Comment(Long postId, String author, String content) {
+	private Comment(Long postId, Long userId, String content) {
 		this.postId = postId;
-		this.author = author;
+		this.userId = userId;
 		this.content = content;
 		this.isDeleted = false;
 	}
 
-	public static Comment createComment(Long postId, String author, String content) {
+	public static Comment createComment(Long postId, Long userId, String content) {
 		return Comment.builder()
 			.postId(postId)
-			.author(author)
+			.userId(userId)
 			.content(content)
 			.build();
 	}
