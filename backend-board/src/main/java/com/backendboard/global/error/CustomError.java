@@ -17,7 +17,12 @@ public enum CustomError {
 
 	//유저 에러
 	USER_DUPLICATION_ID(HttpStatus.FORBIDDEN, "UR100", "중복된 아이디 입니다."),
-	USER_DUPLICATION_NICKNAME(HttpStatus.FORBIDDEN, "UR101", "중복된 닉네임 입니다.");
+	USER_DUPLICATION_NICKNAME(HttpStatus.FORBIDDEN, "UR101", "중복된 닉네임 입니다."),
+	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "UR102", "유저를 찾을 수 없습니다."),
+
+	//댓글 에러
+	COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "CM100", "댓글을 찾을 수 없습니다."),
+	COMMENT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "CM101", "작성자가 아닙니다.");
 
 	private final HttpStatus status;
 	private final String code;

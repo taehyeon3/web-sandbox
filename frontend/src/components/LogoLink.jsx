@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import potatoLogo from '../assets/potato-logo.png';
+import potatoLogo from '../assets/potato1.png';
 
 const LogoLink = ({width = "120"}) => {
     return (

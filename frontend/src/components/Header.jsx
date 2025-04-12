@@ -2,6 +2,7 @@
 import React from 'react';
 import {Button, Container, Navbar} from 'react-bootstrap';
 import {Link, useNavigate} from 'react-router-dom';
+import potatoLogo from "../assets/potato-logo.png";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -21,8 +22,14 @@ const Header = () => {
     return (
         <Navbar bg="light" expand="lg" className="potato-navbar">
             <Container>
+                <img
+                    src={potatoLogo}
+                    alt="감자 로고"
+                    className="potato-logo"
+                    width={50}
+                />
                 <Navbar.Brand as={Link} to="/" className="potato-title"
-                              style={{color: '#a67c52', fontWeight: 'bold', fontSize: '2rem'}}>
+                              style={{color: '#a67c52', fontWeight: 'bold', fontSize: '2rem', marginLeft: '20px'}}>
                     감자 나라
                 </Navbar.Brand>
                 <div className="ms-auto">

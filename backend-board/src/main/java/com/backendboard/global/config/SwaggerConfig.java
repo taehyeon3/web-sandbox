@@ -13,6 +13,14 @@ import io.swagger.v3.oas.models.servers.Server;
 @Configuration
 public class SwaggerConfig {
 	@Bean
+	public GroupedOpenApi comment() {
+		return GroupedOpenApi.builder()
+			.group("댓글 관련 API")
+			.pathsToMatch("/comments/**")
+			.build();
+	}
+
+	@Bean
 	public GroupedOpenApi auth() {
 		return GroupedOpenApi.builder()
 			.group("인증 관련 API")

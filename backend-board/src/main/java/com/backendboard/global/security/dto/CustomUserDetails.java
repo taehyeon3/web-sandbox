@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.backendboard.domain.auth.entitiy.AuthUser;
+import com.backendboard.domain.auth.entity.AuthUser;
 
 import lombok.RequiredArgsConstructor;
 

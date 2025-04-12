@@ -1,6 +1,6 @@
 package com.backendboard.domain.auth.dto;
 
-import com.backendboard.domain.user.entitiy.User;
+import com.backendboard.domain.user.entity.User;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

@@ -1,7 +1,7 @@
-package com.backendboard.domain.auth.entitiy;
+package com.backendboard.domain.auth.entity;
 
-import com.backendboard.domain.auth.entitiy.type.UserRole;
-import com.backendboard.domain.user.entitiy.User;
+import com.backendboard.domain.auth.entity.type.UserRole;
+import com.backendboard.domain.user.entity.User;
 import com.backendboard.global.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,11 +36,20 @@ public class AuthUser extends BaseEntity {
 
 	private boolean status;
 
-	public AuthUser(String username, String password, UserRole role) {
+	@Builder
+	private AuthUser(String username, String password, UserRole role) {
 		this.username = username;
 		this.password = password;
 		this.role = role;
 		this.status = true;
+	}
+
+	public static AuthUser createAuthUser(String username, String password, UserRole role) {
+		return AuthUser.builder()
+			.username(username)
+			.password(password)
+			.role(role)
+			.build();
 	}
 
 	public User createUser(String username, String nickname) {

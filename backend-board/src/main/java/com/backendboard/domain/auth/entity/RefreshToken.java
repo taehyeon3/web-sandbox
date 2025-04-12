@@ -1,13 +1,13 @@
-package com.backendboard.domain.auth.entitiy;
+package com.backendboard.domain.auth.entity;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class RefreshToken {
-	private String refreshToken;
+	private final String refreshToken;
 
-	private String username;
+	private final String username;
 
 	@Builder
 	private RefreshToken(String refreshToken, String username) {

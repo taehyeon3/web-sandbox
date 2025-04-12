@@ -9,8 +9,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import com.backendboard.domain.auth.entitiy.AuthUser;
-import com.backendboard.domain.auth.entitiy.type.UserRole;
+import com.backendboard.domain.auth.entity.AuthUser;
+import com.backendboard.domain.auth.entity.type.UserRole;
 
 @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
 @DataJpaTest
@@ -27,7 +27,7 @@ class AuthUserRepositoryTest {
 		void returnsTrueWhenUsernameExists() {
 			//given
 			String username = "potato";
-			AuthUser authUser = new AuthUser(username, "1234", UserRole.USER);
+			AuthUser authUser = AuthUser.createAuthUser(username, "1234", UserRole.USER);
 			authUserRepository.save(authUser);
 
 			//when

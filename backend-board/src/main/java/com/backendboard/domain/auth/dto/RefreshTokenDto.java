@@ -1,6 +1,6 @@
 package com.backendboard.domain.auth.dto;
 
-import com.backendboard.domain.auth.entitiy.RefreshToken;
+import com.backendboard.domain.auth.entity.RefreshToken;
 
 import lombok.Builder;
 import lombok.Getter;
