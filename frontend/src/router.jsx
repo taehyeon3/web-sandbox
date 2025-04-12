@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -9,7 +9,6 @@ import Join from "./pages/Join.jsx";
 import Header from "./components/Header.jsx";
 
 const Router = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     return (
         <BrowserRouter>
             <Header/>
