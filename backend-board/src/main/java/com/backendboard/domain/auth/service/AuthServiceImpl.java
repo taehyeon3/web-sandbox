@@ -7,12 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.backendboard.domain.auth.dto.JoinRequest;
 import com.backendboard.domain.auth.dto.JoinResponse;
 import com.backendboard.domain.auth.dto.RefreshTokenDto;
-import com.backendboard.domain.auth.entitiy.AuthUser;
-import com.backendboard.domain.auth.entitiy.RefreshToken;
-import com.backendboard.domain.auth.entitiy.type.UserRole;
+import com.backendboard.domain.auth.entity.AuthUser;
+import com.backendboard.domain.auth.entity.RefreshToken;
+import com.backendboard.domain.auth.entity.type.UserRole;
 import com.backendboard.domain.auth.repository.AuthUserRepository;
 import com.backendboard.domain.auth.repository.RefreshTokenRepository;
-import com.backendboard.domain.user.entitiy.User;
+import com.backendboard.domain.user.entity.User;
 import com.backendboard.domain.user.repository.UserRepository;
 import com.backendboard.global.error.CustomError;
 import com.backendboard.global.error.CustomException;
@@ -49,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
 		validateDuplicationId(request.getLoginId());
 		validateDuplicationNickname(request.getNickname());
 
-		AuthUser authUser = new AuthUser(request.getLoginId(),
+		AuthUser authUser = AuthUser.createAuthUser(request.getLoginId(),
 			bCryptPasswordEncoder.encode(request.getPassword()), UserRole.USER);
 		User user = authUser.createUser(request.getUsername(), request.getNickname());
 		authUserRepository.save(authUser);

@@ -1,6 +1,6 @@
 package com.backendboard.domain.auth.repository;
 
-import com.backendboard.domain.auth.entitiy.RefreshToken;
+import com.backendboard.domain.auth.entity.RefreshToken;
 
 public interface RefreshTokenRepository {
 	void save(RefreshToken refreshToken);

@@ -16,10 +16,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.backendboard.domain.auth.dto.JoinRequest;
 import com.backendboard.domain.auth.dto.JoinResponse;
-import com.backendboard.domain.auth.entitiy.AuthUser;
-import com.backendboard.domain.auth.entitiy.type.UserRole;
+import com.backendboard.domain.auth.entity.AuthUser;
+import com.backendboard.domain.auth.entity.type.UserRole;
 import com.backendboard.domain.auth.repository.AuthUserRepository;
-import com.backendboard.domain.user.entitiy.User;
+import com.backendboard.domain.user.entity.User;
 import com.backendboard.domain.user.repository.UserRepository;
 import com.backendboard.global.error.CustomError;
 import com.backendboard.global.error.CustomException;
@@ -54,7 +54,7 @@ class AuthServiceImplTest {
 				.username("potato")
 				.nickname("testNick")
 				.build();
-			authUser = new AuthUser("potato", "encoded_password", UserRole.USER);
+			authUser = AuthUser.createAuthUser("potato", "encoded_password", UserRole.USER);
 			user = authUser.createUser("testId", "testNick");
 		}
 

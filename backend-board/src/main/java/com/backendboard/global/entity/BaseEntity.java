@@ -13,8 +13,8 @@ import jakarta.persistence.MappedSuperclass;
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
 	@CreatedDate
-	private LocalDateTime createdAt;
+	private LocalDateTime createdDate;
 
 	@LastModifiedDate
-	private LocalDateTime lastModifiedAt;
+	private LocalDateTime lastModifiedDate;
 }

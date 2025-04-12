@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.backendboard.domain.auth.entitiy.AuthUser;
+import com.backendboard.domain.auth.entity.AuthUser;
 import com.backendboard.domain.auth.repository.AuthUserRepository;
 import com.backendboard.global.error.CustomError;
 import com.backendboard.global.security.dto.CustomUserDetails;

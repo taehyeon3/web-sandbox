@@ -3,7 +3,7 @@ package com.backendboard.global.security.service;
 import org.springframework.stereotype.Service;
 
 import com.backendboard.domain.auth.dto.RefreshTokenDto;
-import com.backendboard.domain.auth.entitiy.RefreshToken;
+import com.backendboard.domain.auth.entity.RefreshToken;
 import com.backendboard.domain.auth.repository.RefreshTokenRepository;
 
 import lombok.RequiredArgsConstructor;
