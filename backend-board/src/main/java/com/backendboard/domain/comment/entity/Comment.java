@@ -26,7 +26,7 @@ public class Comment extends BaseEntity {
 	@Column(nullable = false)
 	private String author;
 
-	@Column(nullable = false, columnDefinition = "VARCHAR(500)")
+	@Column(nullable = false, columnDefinition = "VARCHAR(1000)")
 	private String content;
 
 	@Column(nullable = false)
