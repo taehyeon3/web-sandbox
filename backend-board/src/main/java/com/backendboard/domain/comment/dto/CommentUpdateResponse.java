@@ -1,5 +1,7 @@
 package com.backendboard.domain.comment.dto;
 
+import com.backendboard.domain.comment.entity.Comment;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,5 +27,14 @@ public class CommentUpdateResponse {
 		this.postId = postId;
 		this.author = author;
 		this.content = content;
+	}
+
+	public static CommentUpdateResponse toDto(Comment comment) {
+		return CommentUpdateResponse.builder()
+			.id(comment.getId())
+			.postId(comment.getPostId())
+			.author(comment.getAuthor())
+			.content(comment.getContent())
+			.build();
 	}
 }

@@ -19,6 +19,7 @@ import com.backendboard.global.error.CustomException;
 
 import lombok.RequiredArgsConstructor;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
