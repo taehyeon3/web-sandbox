@@ -1,6 +1,7 @@
 package com.backendboard.domain.image.entity;
 
 import com.backendboard.global.entity.BaseEntity;
+import com.backendboard.global.util.dto.FileInfo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,5 +46,12 @@ public class Image extends BaseEntity {
 
 	public void delete() {
 		imageCollectionId = null;
+	}
+
+	public void updateFile(FileInfo info) {
+		this.originalFileName = info.getOriginalFileName();
+		this.storedFileName = info.getStoredFileName();
+		this.imageType = info.getContentType();
+		this.fileSize = info.getFileSize();
 	}
 }
