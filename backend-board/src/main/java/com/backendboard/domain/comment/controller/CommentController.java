@@ -84,7 +84,7 @@ public class CommentController {
 
 	@Operation(
 		summary = "댓글 보기 API",
-		description = "댓글을 봅니다.",
+		description = "댓글을 보여줍니다.",
 		security = {@SecurityRequirement(name = "bearerAuth")}
 	)
 	@ApiResponses({

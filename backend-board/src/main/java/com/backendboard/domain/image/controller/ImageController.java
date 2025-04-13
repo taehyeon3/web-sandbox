@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.backendboard.domain.image.dto.ImageCreateResponse;
+import com.backendboard.domain.image.dto.ImageReadResponse;
 import com.backendboard.domain.image.dto.ImageUpdateResponse;
 import com.backendboard.domain.image.service.ImageService;
 import com.backendboard.global.error.dto.ErrorResponse;
@@ -51,6 +53,24 @@ public class ImageController {
 	public ResponseEntity<ImageCreateResponse> createImage(@RequestParam("image") MultipartFile image)
 		throws IOException {
 		ImageCreateResponse response = imageService.uploadImage(image);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	}
+
+	@Operation(
+		summary = "이미지 보기 API",
+		description = "이미지를 보여줍니다.",
+		security = {@SecurityRequirement(name = "bearerAuth")}
+	)
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "200 성공",
+			content = @Content(
+				mediaType = "application/json", schema = @Schema(implementation = ImageReadResponse.class))),
+		@ApiResponse(responseCode = "400", description = "이미지 파일이 아닙니다.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+	})
+	@GetMapping("/{imageId}")
+	public ResponseEntity<ImageReadResponse> readImage(@PathVariable Long imageId) {
+		ImageReadResponse response = imageService.getImage(imageId);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 

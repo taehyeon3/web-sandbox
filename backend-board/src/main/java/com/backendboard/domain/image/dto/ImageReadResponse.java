@@ -28,7 +28,7 @@ public class ImageReadResponse {
 	public static ImageReadResponse toDto(Image image) {
 		return ImageReadResponse.builder()
 			.id(image.getId())
-			.fileName(image.getStoredFileName())
+			.fileName(image.getOriginalFileName())
 			.fileUrl(image.getStoredFileName())
 			.build();
 	}

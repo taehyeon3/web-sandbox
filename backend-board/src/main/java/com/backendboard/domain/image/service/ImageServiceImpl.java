@@ -39,7 +39,9 @@ public class ImageServiceImpl implements ImageService {
 
 	@Override
 	public ImageReadResponse getImage(Long imageId) {
-		return null;
+		Image image = imageRepository.findById(imageId)
+			.orElseThrow(() -> new CustomException(CustomError.IMAGE_NOT_FOUND));
+		return ImageReadResponse.toDto(image);
 	}
 
 	@Transactional
