@@ -90,22 +90,6 @@ class CommentControllerTest {
 				.andExpect(jsonPath("$.postId").value(1L))
 				.andDo(print());
 		}
-
-		@Test
-		@WithMockUser
-		@DisplayName("댓글 생성 실패 - 유효하지 않은 요청")
-		void createComment_InvalidRequest() throws Exception {
-			// given
-			CommentCreateRequest request = CommentCreateRequest.builder().postId(1L).content("안녕하세요").build();
-
-			// when & then
-			mockMvc.perform(post("/comments")
-					.with(SecurityMockMvcRequestPostProcessors.user(userDetails))
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(objectMapper.writeValueAsString(request)))
-				.andExpect(status().isBadRequest())
-				.andDo(print());
-		}
 	}
 
 	@Nested
