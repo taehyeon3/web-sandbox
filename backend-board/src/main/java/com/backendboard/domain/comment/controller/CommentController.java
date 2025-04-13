@@ -66,7 +66,7 @@ public class CommentController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",
 			content = @Content(
-				mediaType = "application/json", schema = @Schema(implementation = CommentCreateResponse.class))),
+				mediaType = "application/json", schema = @Schema(implementation = CommentUpdateResponse.class))),
 		@ApiResponse(responseCode = "400", description = "잘못된 요청입니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 		@ApiResponse(responseCode = "403", description = "작성자가 아닙니다.",
@@ -90,7 +90,7 @@ public class CommentController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",
 			content = @Content(
-				mediaType = "application/json", schema = @Schema(implementation = CommentCreateResponse.class))),
+				mediaType = "application/json", schema = @Schema(implementation = CommentReadResponse.class))),
 		@ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없습니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
@@ -106,9 +106,7 @@ public class CommentController {
 		security = {@SecurityRequirement(name = "bearerAuth")}
 	)
 	@ApiResponses({
-		@ApiResponse(responseCode = "204", description = "204 성공",
-			content = @Content(
-				mediaType = "application/json", schema = @Schema(implementation = CommentCreateResponse.class))),
+		@ApiResponse(responseCode = "204", description = "204 성공", content = @Content()),
 		@ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없습니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
