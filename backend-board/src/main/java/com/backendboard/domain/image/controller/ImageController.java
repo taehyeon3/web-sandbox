@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.backendboard.domain.image.dto.ImageCreateResponse;
 import com.backendboard.domain.image.service.ImageService;
+import com.backendboard.global.error.dto.ErrorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -39,11 +42,31 @@ public class ImageController {
 		@ApiResponse(responseCode = "201", description = "201 성공",
 			content = @Content(
 				mediaType = "application/json", schema = @Schema(implementation = ImageCreateResponse.class))),
+		@ApiResponse(responseCode = "400", description = "이미지 파일이 아닙니다.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ImageCreateResponse> createImage(@RequestParam("file") MultipartFile file)
+	public ResponseEntity<ImageCreateResponse> createImage(@RequestParam("image") MultipartFile image)
 		throws IOException {
-		ImageCreateResponse response = imageService.uploadImage(file);
+		ImageCreateResponse response = imageService.uploadImage(image);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	}
+
+	@Operation(
+		summary = "이미지 삭제 API",
+		description = "이미지를 삭제합니다.",
+		security = {@SecurityRequirement(name = "bearerAuth")}
+	)
+	@ApiResponses({
+		@ApiResponse(responseCode = "204", description = "204 성공",
+			content = @Content(
+				mediaType = "application/json", schema = @Schema())),
+		@ApiResponse(responseCode = "404", description = "이미지를 찾을 수 없습니다.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+	})
+	@DeleteMapping("/{imageId}")
+	public ResponseEntity<Void> deleteImage(@PathVariable Long imageId) {
+		imageService.deleteImage(imageId);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }

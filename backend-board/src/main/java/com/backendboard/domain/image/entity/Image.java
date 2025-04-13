@@ -32,11 +32,18 @@ public class Image extends BaseEntity {
 	@Column(nullable = false)
 	private Long fileSize;
 
+	private Long imageCollectionId;
+
 	@Builder
 	private Image(String originalFileName, String storedFileName, String imageType, Long fileSize) {
 		this.originalFileName = originalFileName;
 		this.storedFileName = storedFileName;
 		this.imageType = imageType;
 		this.fileSize = fileSize;
+		this.imageCollectionId = null;
+	}
+
+	public void delete() {
+		imageCollectionId = null;
 	}
 }

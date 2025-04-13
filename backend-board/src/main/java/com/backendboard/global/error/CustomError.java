@@ -22,7 +22,11 @@ public enum CustomError {
 
 	//댓글 에러
 	COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "CM100", "댓글을 찾을 수 없습니다."),
-	COMMENT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "CM101", "작성자가 아닙니다.");
+	COMMENT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "CM101", "작성자가 아닙니다."),
+
+	//이미지 에러
+	IMAGE_INVALID_TYPE(HttpStatus.BAD_REQUEST, "IM100", "이미지 타입이 아닙니다."),
+	IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "IM101", "이미지를 찾을 수 없습니다.");
 
 	private final HttpStatus status;
 	private final String code;

@@ -2,6 +2,9 @@ package com.backendboard.global.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +15,8 @@ import com.backendboard.global.util.dto.FileInfo;
 
 @Component
 public class FileUtil {
+	private static final Set<String> IMAGE_TYPES = new HashSet<>(
+		Arrays.asList(".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"));
 	private final String uploadDirectory;
 
 	private void createDirectory() {
@@ -44,5 +49,12 @@ public class FileUtil {
 	public void deleteFile(String fileName) {
 		File file = new File(uploadDirectory, fileName);
 		file.delete();
+	}
+
+	public boolean isValidateImageType(String imageType) {
+		if (imageType == null || imageType.isEmpty()) {
+			return false;
+		}
+		return IMAGE_TYPES.contains(imageType);
 	}
 }
