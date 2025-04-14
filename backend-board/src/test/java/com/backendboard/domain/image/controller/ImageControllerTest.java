@@ -3,6 +3,9 @@ package com.backendboard.domain.image.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.io.IOException;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,12 +19,18 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.backendboard.domain.auth.entity.AuthUser;
 import com.backendboard.domain.auth.entity.type.UserRole;
+import com.backendboard.domain.image.ImageMockData;
+import com.backendboard.domain.image.entity.Image;
 import com.backendboard.global.security.dto.CustomUserDetails;
+import com.backendboard.global.util.FileUtil;
+import com.backendboard.global.util.dto.FileInfo;
 import com.backendboard.util.TestDataUtil;
+import com.jayway.jsonpath.JsonPath;
 
 @Transactional
 @SpringBootTest
@@ -37,11 +46,27 @@ class ImageControllerTest {
 	@Autowired
 	private TestDataUtil testDataUtil;
 
+	@Autowired
+	private FileUtil fileUtil;
+
+	@Autowired
+	private ImageMockData imageMockData;
+
+	MockMultipartFile imageFile;
+
+	FileInfo fileInfo;
+
 	@BeforeEach
-	void setUp() {
+	void setUp() throws IOException {
 		AuthUser authUser = testDataUtil.createAuthUser("user", "1234", UserRole.USER);
 		userDetails = new CustomUserDetails(authUser);
 		testDataUtil.createUser(authUser, "홍길동", "감자");
+		imageFile = new MockMultipartFile("image", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "이미지 테스트 데이터".getBytes());
+	}
+
+	@AfterEach
+	void cleanUp() {
+		fileUtil.deleteFile(fileInfo.getStoredFileName());
 	}
 
 	@Nested
@@ -53,22 +78,21 @@ class ImageControllerTest {
 		@DisplayName("성공 201")
 		void success() throws Exception {
 			// given
-			MockMultipartFile imageFile = new MockMultipartFile(
-				"image",
-				"test.jpg",
-				MediaType.IMAGE_JPEG_VALUE,
-				"이미지 테스트 데이터".getBytes()
-			);
+			fileInfo = fileUtil.saveFile(imageFile);
+			Image image = imageMockData.createImage(fileInfo);
+			fileUtil.deleteFile(image.getStoredFileName());
 
 			// when & then
-			mockMvc.perform(multipart("/images")
+			MvcResult result = mockMvc.perform(multipart("/images")
 					.file(imageFile)
 					.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 					.with(SecurityMockMvcRequestPostProcessors.user(userDetails)))
 				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").value(1L))
 				.andExpect(jsonPath("$.fileName").value("test.jpg"))
-				.andExpect(jsonPath("$.imageUrl").value("http://example.com/test.jpg"));
+				.andReturn();
+			String responseContent = result.getResponse().getContentAsString();
+			String fileUrl = JsonPath.read(responseContent, "$.fileUrl");
+			fileUtil.deleteFile(fileUrl);
 		}
 	}
 
@@ -81,15 +105,16 @@ class ImageControllerTest {
 		@DisplayName("성공 200")
 		void success() throws Exception {
 			// given
-			Long imageId = 1L;
+			fileInfo = fileUtil.saveFile(imageFile);
+			Image image = imageMockData.createImage(fileInfo);
 
 			// when & then
-			mockMvc.perform(get("/images/{imageId}", imageId)
+			mockMvc.perform(get("/images/{imageId}", image.getId())
 					.with(SecurityMockMvcRequestPostProcessors.user(userDetails)))
 				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").value(1L))
-				.andExpect(jsonPath("$.fileName").value("test.jpg"))
-				.andExpect(jsonPath("$.imageUrl").value("http://example.com/test.jpg"));
+				.andExpect(jsonPath("$.id").value(image.getId()))
+				.andExpect(jsonPath("$.fileName").value(image.getOriginalFileName()))
+				.andExpect(jsonPath("$.fileUrl").value(image.getStoredFileName()));
 		}
 	}
 
@@ -102,16 +127,11 @@ class ImageControllerTest {
 		@DisplayName("성공 200")
 		void success() throws Exception {
 			// given
-			Long imageId = 1L;
-			MockMultipartFile imageFile = new MockMultipartFile(
-				"image",
-				"updated.jpg",
-				MediaType.IMAGE_JPEG_VALUE,
-				"수정된 이미지 테스트 데이터".getBytes()
-			);
+			fileInfo = fileUtil.saveFile(imageFile);
+			Image image = imageMockData.createImage(fileInfo);
 
 			// when & then
-			mockMvc.perform(multipart("/images/{imageId}", imageId)
+			mockMvc.perform(multipart("/images/{imageId}", image.getId())
 					.file(imageFile)
 					.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 					.with(SecurityMockMvcRequestPostProcessors.user(userDetails))
@@ -120,9 +140,10 @@ class ImageControllerTest {
 						return request;
 					}))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.id").value(1L))
-				.andExpect(jsonPath("$.fileName").value("updated.jpg"))
-				.andExpect(jsonPath("$.imageUrl").value("http://example.com/updated.jpg"));
+				.andExpect(jsonPath("$.id").value(image.getId()))
+				.andExpect(jsonPath("$.fileName").value(image.getOriginalFileName()))
+				.andExpect(jsonPath("$.fileUrl").value(image.getStoredFileName()));
+			fileUtil.deleteFile(image.getStoredFileName());
 		}
 	}
 
@@ -135,12 +156,27 @@ class ImageControllerTest {
 		@DisplayName("성공 204")
 		void success() throws Exception {
 			// given
-			Long imageId = 1L;
+			fileInfo = fileUtil.saveFile(imageFile);
+			Image image = imageMockData.createImage(fileInfo);
 
 			// when & then
-			mockMvc.perform(delete("/images/{imageId}", imageId)
+			mockMvc.perform(delete("/images/{imageId}", image.getId())
 					.with(SecurityMockMvcRequestPostProcessors.user(userDetails)))
 				.andExpect(status().isNoContent());
+		}
+
+		@Test
+		@WithMockUser
+		@DisplayName("이미지를 찾을 수 없습니다. 404")
+		void notFoundImage() throws Exception {
+			// given
+			fileInfo = fileUtil.saveFile(imageFile);
+			Image image = imageMockData.createImage(fileInfo);
+
+			// when & then
+			mockMvc.perform(delete("/images/{imageId}", image.getId() + 1)
+					.with(SecurityMockMvcRequestPostProcessors.user(userDetails)))
+				.andExpect(status().isNotFound());
 		}
 	}
 }
