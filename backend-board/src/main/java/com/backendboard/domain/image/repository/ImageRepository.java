@@ -10,4 +10,6 @@ import com.backendboard.domain.image.entity.Image;
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long> {
 	List<Image> findByIdInAndImageCollectionIdIsNull(List<Long> ids);
+
+	List<Image> findByImageCollectionId(Long imageCollectionId);
 }

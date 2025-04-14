@@ -111,7 +111,7 @@ class ImageControllerTest {
 			// when & then
 			mockMvc.perform(get("/images/{imageId}", image.getId())
 					.with(SecurityMockMvcRequestPostProcessors.user(userDetails)))
-				.andExpect(status().isCreated())
+				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(image.getId()))
 				.andExpect(jsonPath("$.fileName").value(image.getOriginalFileName()))
 				.andExpect(jsonPath("$.fileUrl").value(image.getStoredFileName()));

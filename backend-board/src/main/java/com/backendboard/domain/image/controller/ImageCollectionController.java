@@ -70,7 +70,7 @@ public class ImageCollectionController {
 	@GetMapping("/{imageCollectionId}")
 	public ResponseEntity<ImageCollectionReadResponse> readImageCollection(@PathVariable Long imageCollectionId) {
 		ImageCollectionReadResponse response = imageCollectionService.getImageCollection(imageCollectionId);
-		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@Operation(

@@ -2,6 +2,8 @@ package com.backendboard.domain.image.dto;
 
 import java.util.List;
 
+import com.backendboard.domain.image.entity.Image;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,5 +21,12 @@ public class ImageCollectionReadResponse {
 	private ImageCollectionReadResponse(Long imageCollectionId, List<Long> imageIds) {
 		this.imageCollectionId = imageCollectionId;
 		this.imageIds = imageIds;
+	}
+
+	public static ImageCollectionReadResponse toDto(Long imageCollectionId, List<Image> images) {
+		return ImageCollectionReadResponse.builder()
+			.imageCollectionId(imageCollectionId)
+			.imageIds(images.stream().map(Image::getId).toList())
+			.build();
 	}
 }
