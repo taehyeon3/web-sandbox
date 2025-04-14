@@ -54,7 +54,17 @@ public class ImageCollectionServiceImpl implements ImageCollectionService {
 	@Override
 	public ImageCollectionUpdateResponse updateImageCollection(ImageCollectionUpdateRequest request,
 		Long imageCollectionId) {
-		return null;
+		List<Long> imageIds = request.getImageIds();
+		ImageCollection imageCollection = imageCollectionRepository.findById(imageCollectionId)
+			.orElseThrow(() -> new CustomException(CustomError.IMAGE_COLLECTION_NOT_FOUND));
+		List<Image> images = imageRepository.findAllById(imageIds);
+
+		validateImageIds(imageIds, images);
+
+		for (Image image : images) {
+			image.updateCollectionId(imageCollection.getId());
+		}
+		return ImageCollectionUpdateResponse.toDto(imageCollection.getId(), images);
 	}
 
 	@Transactional
