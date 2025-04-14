@@ -15,16 +15,21 @@ public class ImageCreateResponse {
 	@Schema(description = "이미지 원본 파일이름", example = "potato.png")
 	private final String fileName;
 
+	@Schema(description = "이미지 url", example = "1_potato.png")
+	private final String fileUrl;
+
 	@Builder
-	private ImageCreateResponse(Long id, String fileName) {
+	private ImageCreateResponse(Long id, String fileName, String fileUrl) {
 		this.id = id;
 		this.fileName = fileName;
+		this.fileUrl = fileUrl;
 	}
 
 	public static ImageCreateResponse toDto(Image image) {
 		return ImageCreateResponse.builder()
 			.id(image.getId())
 			.fileName(image.getOriginalFileName())
+			.fileUrl(image.getStoredFileName())
 			.build();
 	}
 }
