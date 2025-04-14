@@ -22,7 +22,7 @@ public class FileUtil {
 	private void createDirectory() {
 		File directory = new File(uploadDirectory);
 		if (!directory.exists()) {
-			directory.mkdir();
+			directory.mkdirs();
 		}
 	}
 
