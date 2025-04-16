@@ -16,7 +16,7 @@ public class SwaggerConfig {
 	public GroupedOpenApi image() {
 		return GroupedOpenApi.builder()
 			.group("이미지 관련 API")
-			.pathsToMatch("/images/**")
+			.pathsToMatch("/images/**", "/image-collections/**")
 			.build();
 	}
 

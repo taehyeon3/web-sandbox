@@ -71,7 +71,7 @@ public class ImageController {
 	@GetMapping("/{imageId}")
 	public ResponseEntity<ImageReadResponse> readImage(@PathVariable Long imageId) {
 		ImageReadResponse response = imageService.getImage(imageId);
-		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@Operation(

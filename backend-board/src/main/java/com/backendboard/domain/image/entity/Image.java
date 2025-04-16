@@ -48,6 +48,10 @@ public class Image extends BaseEntity {
 		imageCollectionId = null;
 	}
 
+	public void updateCollectionId(Long imageCollectionId) {
+		this.imageCollectionId = imageCollectionId;
+	}
+
 	public void updateFile(FileInfo info) {
 		this.originalFileName = info.getOriginalFileName();
 		this.storedFileName = info.getStoredFileName();
