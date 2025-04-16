@@ -44,7 +44,7 @@ public class AuthUser extends BaseEntity {
 		this.status = true;
 	}
 
-	public static AuthUser createAuthUser(String username, String password, UserRole role) {
+	public static AuthUser create(String username, String password, UserRole role) {
 		return AuthUser.builder()
 			.username(username)
 			.password(password)

@@ -20,7 +20,7 @@ public class UserMockData {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	public User createUserAndAuthUser(JoinRequest request) {
-		AuthUser authUser = AuthUser.createAuthUser(request.getLoginId(),
+		AuthUser authUser = AuthUser.create(request.getLoginId(),
 			bCryptPasswordEncoder.encode(request.getPassword()), UserRole.USER);
 		User user = authUser.createUser(request.getUsername(), request.getNickname());
 		authUserRepository.save(authUser);

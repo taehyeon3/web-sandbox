@@ -54,7 +54,7 @@ class AuthServiceImplTest {
 				.username("potato")
 				.nickname("testNick")
 				.build();
-			authUser = AuthUser.createAuthUser("potato", "encoded_password", UserRole.USER);
+			authUser = AuthUser.create("potato", "encoded_password", UserRole.USER);
 			user = authUser.createUser("testId", "testNick");
 		}
 
