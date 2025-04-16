@@ -43,7 +43,8 @@ public class ImageCollectionController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "201", description = "201 성공",
 			content = @Content(
-				mediaType = "application/json", schema = @Schema(implementation = ImageCollectionCreateResponse.class))),
+				mediaType = "application/json",
+				schema = @Schema(implementation = ImageCollectionCreateResponse.class))),
 		@ApiResponse(responseCode = "404", description = "이미지를 찾을 수 없습니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
@@ -80,7 +81,8 @@ public class ImageCollectionController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",
 			content = @Content(
-				mediaType = "application/json", schema = @Schema(implementation = ImageCollectionUpdateResponse.class))),
+				mediaType = "application/json",
+				schema = @Schema(implementation = ImageCollectionUpdateResponse.class))),
 		@ApiResponse(responseCode = "404", description = "이미지를 찾을 수 없습니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
