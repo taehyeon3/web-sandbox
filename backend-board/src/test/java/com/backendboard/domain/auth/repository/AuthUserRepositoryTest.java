@@ -27,7 +27,7 @@ class AuthUserRepositoryTest {
 		void returnsTrueWhenUsernameExists() {
 			//given
 			String username = "potato";
-			AuthUser authUser = AuthUser.createAuthUser(username, "1234", UserRole.USER);
+			AuthUser authUser = AuthUser.create(username, "1234", UserRole.USER);
 			authUserRepository.save(authUser);
 
 			//when
