@@ -37,6 +37,6 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
 	@Override
 	public boolean exists(String refreshToken) {
 		Boolean hasKey = redisTemplate.hasKey(KEY_PREFIX + refreshToken);
-		return hasKey != null && hasKey;
+		return Boolean.TRUE.equals(hasKey);
 	}
 }
