@@ -29,8 +29,8 @@ public class LikeController {
 	private final LikeService likeService;
 
 	@Operation(
-		summary = "포스트 좋아요 토글 API",
-		description = "포트 좋아요 토글 기능입니다.",
+		summary = "게시판 좋아요 토글 API",
+		description = "게시판 좋아요 토글 기능입니다.",
 		security = {@SecurityRequirement(name = "bearerAuth")}
 	)
 	@ApiResponses({
@@ -41,6 +41,6 @@ public class LikeController {
 	public ResponseEntity<LikeResponse> togglePostLike(@AuthenticationPrincipal CustomUserDetails customUserDetails,
 		@PathVariable Long postId) {
 		LikeResponse response = likeService.togglePostLike(customUserDetails.getId(), postId);
-		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }

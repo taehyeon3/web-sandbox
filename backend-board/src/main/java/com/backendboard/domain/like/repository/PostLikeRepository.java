@@ -7,5 +7,5 @@ import com.backendboard.domain.like.entity.PostLike;
 
 @Repository
 public interface PostLikeRepository extends JpaRepository<PostLike, Long> {
-
+	int deleteByUserIdAndPostId(Long userId, Long postId);
 }
