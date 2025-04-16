@@ -16,7 +16,7 @@ public class SwaggerConfig {
 	public GroupedOpenApi like() {
 		return GroupedOpenApi.builder()
 			.group("좋아요 관련 API")
-			.pathsToMatch("/likes/**")
+			.pathsToMatch("/post-likes/**")
 			.build();
 	}
 

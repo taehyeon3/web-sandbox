@@ -1,4 +1,4 @@
-package com.backendboard.domain.like.entity;
+package com.backendboard.domain.postlike.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
