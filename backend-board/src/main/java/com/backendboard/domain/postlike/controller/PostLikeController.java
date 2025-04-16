@@ -76,9 +76,8 @@ public class PostLikeController {
 				schema = @Schema(implementation = PostLikeCountResponse.class)))
 	})
 	@GetMapping("/{postId}/count")
-	public ResponseEntity<PostLikeCountResponse> getLikeCount(
-		@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long postId) {
-		PostLikeCountResponse response = postLikeService.getLikeCount(customUserDetails.getId(), postId);
+	public ResponseEntity<PostLikeCountResponse> getLikeCount(@PathVariable Long postId) {
+		PostLikeCountResponse response = postLikeService.getLikeCount(postId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }

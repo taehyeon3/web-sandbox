@@ -40,7 +40,8 @@ public class PostLikeServiceImpl implements PostLikeService {
 	}
 
 	@Override
-	public PostLikeCountResponse getLikeCount(Long authUserId, Long postId) {
-		return null;
+	public PostLikeCountResponse getLikeCount(Long postId) {
+		Long count = postLikeRepository.countByPostId(postId);
+		return PostLikeCountResponse.toDto(count);
 	}
 }

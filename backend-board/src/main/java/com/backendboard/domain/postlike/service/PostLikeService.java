@@ -8,5 +8,5 @@ public interface PostLikeService {
 
 	PostLikeStatusResponse getLikeStatus(Long authUserId, Long postId);
 
-	PostLikeCountResponse getLikeCount(Long authUserId, Long postId);
+	PostLikeCountResponse getLikeCount(Long postId);
 }
