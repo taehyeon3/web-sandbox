@@ -1,7 +1,6 @@
 package com.backendboard.domain.image.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,7 +84,7 @@ public class ImageCollectionController {
 		@ApiResponse(responseCode = "404", description = "이미지를 찾을 수 없습니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
-	@PutMapping(value = "/{imageCollectionId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(value = "/{imageCollectionId}")
 	public ResponseEntity<ImageCollectionUpdateResponse> updateImageCollection(
 		@RequestBody ImageCollectionUpdateRequest request, @PathVariable Long imageCollectionId) {
 		ImageCollectionUpdateResponse response = imageCollectionService.updateImageCollection(request,
@@ -107,6 +106,7 @@ public class ImageCollectionController {
 	})
 	@DeleteMapping("/{imageCollectionId}")
 	public ResponseEntity<Void> deleteImageCollection(@PathVariable Long imageCollectionId) {
+		imageCollectionService.deleteImageCollection(imageCollectionId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }

@@ -55,22 +55,33 @@ public class ImageCollectionServiceImpl implements ImageCollectionService {
 	public ImageCollectionUpdateResponse updateImageCollection(ImageCollectionUpdateRequest request,
 		Long imageCollectionId) {
 		List<Long> imageIds = request.getImageIds();
+		List<Image> oldCollectionImages = imageRepository.findByImageCollectionId(imageCollectionId);
+		List<Image> newCollectionImages = imageRepository.findAllById(imageIds);
 		ImageCollection imageCollection = imageCollectionRepository.findById(imageCollectionId)
 			.orElseThrow(() -> new CustomException(CustomError.IMAGE_COLLECTION_NOT_FOUND));
-		List<Image> images = imageRepository.findAllById(imageIds);
 
-		validateImageIds(imageIds, images);
+		validateImageIds(imageIds, newCollectionImages);
 
-		for (Image image : images) {
+		for (Image image : oldCollectionImages) {
+			image.delete();
+		}
+		for (Image image : newCollectionImages) {
 			image.updateCollectionId(imageCollection.getId());
 		}
-		return ImageCollectionUpdateResponse.toDto(imageCollection.getId(), images);
+		return ImageCollectionUpdateResponse.toDto(imageCollection.getId(), newCollectionImages);
 	}
 
 	@Transactional
 	@Override
 	public void deleteImageCollection(Long imageCollectionId) {
+		ImageCollection imageCollection = imageCollectionRepository.findById(imageCollectionId)
+			.orElseThrow(() -> new CustomException(CustomError.IMAGE_COLLECTION_NOT_FOUND));
+		List<Image> images = imageRepository.findByImageCollectionId(imageCollectionId);
 
+		for (Image image : images) {
+			image.delete();
+		}
+		imageCollectionRepository.delete(imageCollection);
 	}
 
 	private static void validateImageIds(List<Long> imageIds, List<Image> images) {
