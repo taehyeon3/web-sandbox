@@ -58,6 +58,12 @@ public class PostServiceImpl implements PostService {
 	@Transactional
 	@Override
 	public void deletePost(Long postId, Long authUserId) {
+		Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(CustomError.POST_NOT_FOUND));
+		User user = userRepository.getByAuthUserId(authUserId);
+
+		validateAuthor(post, user);
+
+		post.delete();
 	}
 
 	public void validateAuthor(Post post, User user) {
