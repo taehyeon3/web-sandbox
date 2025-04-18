@@ -1,6 +1,6 @@
-package com.backendboard.domain.image.dto;
+package com.backendboard.domain.postimage.dto;
 
-import com.backendboard.domain.image.entity.Image;
+import com.backendboard.domain.postimage.entity.PostImage;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Schema(description = "이미지 수정 응답 DTO")
 @Getter
-public class ImageUpdateResponse {
+public class PostImageUpdateResponse {
 	@Schema(description = "이미지 아이디", example = "1")
 	private final Long id;
 
@@ -19,17 +19,17 @@ public class ImageUpdateResponse {
 	private final String fileUrl;
 
 	@Builder
-	private ImageUpdateResponse(Long id, String fileName, String fileUrl) {
+	private PostImageUpdateResponse(Long id, String fileName, String fileUrl) {
 		this.id = id;
 		this.fileName = fileName;
 		this.fileUrl = fileUrl;
 	}
 
-	public static ImageUpdateResponse toDto(Image image) {
-		return ImageUpdateResponse.builder()
-			.id(image.getId())
-			.fileName(image.getOriginalFileName())
-			.fileUrl(image.getStoredFileName())
+	public static PostImageUpdateResponse toDto(PostImage postImage) {
+		return PostImageUpdateResponse.builder()
+			.id(postImage.getId())
+			.fileName(postImage.getOriginalFileName())
+			.fileUrl(postImage.getStoredFileName())
 			.build();
 	}
 }

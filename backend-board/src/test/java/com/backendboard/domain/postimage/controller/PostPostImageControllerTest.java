@@ -1,4 +1,4 @@
-package com.backendboard.domain.image.controller;
+package com.backendboard.domain.postimage.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -24,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.backendboard.domain.auth.entity.AuthUser;
 import com.backendboard.domain.auth.entity.type.UserRole;
-import com.backendboard.domain.image.ImageMockData;
-import com.backendboard.domain.image.entity.Image;
+import com.backendboard.domain.postimage.ImageMockData;
+import com.backendboard.domain.postimage.entity.PostImage;
 import com.backendboard.global.security.dto.CustomUserDetails;
 import com.backendboard.global.util.FileUtil;
 import com.backendboard.global.util.dto.FileInfo;
@@ -35,7 +35,7 @@ import com.jayway.jsonpath.JsonPath;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-class ImageControllerTest {
+class PostPostImageControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -71,7 +71,7 @@ class ImageControllerTest {
 
 	@Nested
 	@DisplayName("이미지 생성 테스트")
-	class CreateImage {
+	class CreatePostImage {
 
 		@Test
 		@WithMockUser
@@ -79,8 +79,8 @@ class ImageControllerTest {
 		void success() throws Exception {
 			// given
 			fileInfo = fileUtil.saveFile(imageFile);
-			Image image = imageMockData.createImage(fileInfo);
-			fileUtil.deleteFile(image.getStoredFileName());
+			PostImage postImage = imageMockData.createImage(fileInfo);
+			fileUtil.deleteFile(postImage.getStoredFileName());
 
 			// when & then
 			MvcResult result = mockMvc.perform(multipart("/images")
@@ -98,7 +98,7 @@ class ImageControllerTest {
 
 	@Nested
 	@DisplayName("이미지 조회 테스트")
-	class ReadImage {
+	class ReadPostImage {
 
 		@Test
 		@WithMockUser
@@ -106,21 +106,21 @@ class ImageControllerTest {
 		void success() throws Exception {
 			// given
 			fileInfo = fileUtil.saveFile(imageFile);
-			Image image = imageMockData.createImage(fileInfo);
+			PostImage postImage = imageMockData.createImage(fileInfo);
 
 			// when & then
-			mockMvc.perform(get("/images/{imageId}", image.getId())
+			mockMvc.perform(get("/images/{imageId}", postImage.getId())
 					.with(SecurityMockMvcRequestPostProcessors.user(userDetails)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.id").value(image.getId()))
-				.andExpect(jsonPath("$.fileName").value(image.getOriginalFileName()))
-				.andExpect(jsonPath("$.fileUrl").value(image.getStoredFileName()));
+				.andExpect(jsonPath("$.id").value(postImage.getId()))
+				.andExpect(jsonPath("$.fileName").value(postImage.getOriginalFileName()))
+				.andExpect(jsonPath("$.fileUrl").value(postImage.getStoredFileName()));
 		}
 	}
 
 	@Nested
 	@DisplayName("이미지 수정 테스트")
-	class UpdateImage {
+	class UpdatePostImage {
 
 		@Test
 		@WithMockUser
@@ -128,10 +128,10 @@ class ImageControllerTest {
 		void success() throws Exception {
 			// given
 			fileInfo = fileUtil.saveFile(imageFile);
-			Image image = imageMockData.createImage(fileInfo);
+			PostImage postImage = imageMockData.createImage(fileInfo);
 
 			// when & then
-			mockMvc.perform(multipart("/images/{imageId}", image.getId())
+			mockMvc.perform(multipart("/images/{imageId}", postImage.getId())
 					.file(imageFile)
 					.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 					.with(SecurityMockMvcRequestPostProcessors.user(userDetails))
@@ -140,16 +140,16 @@ class ImageControllerTest {
 						return request;
 					}))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.id").value(image.getId()))
-				.andExpect(jsonPath("$.fileName").value(image.getOriginalFileName()))
-				.andExpect(jsonPath("$.fileUrl").value(image.getStoredFileName()));
-			fileUtil.deleteFile(image.getStoredFileName());
+				.andExpect(jsonPath("$.id").value(postImage.getId()))
+				.andExpect(jsonPath("$.fileName").value(postImage.getOriginalFileName()))
+				.andExpect(jsonPath("$.fileUrl").value(postImage.getStoredFileName()));
+			fileUtil.deleteFile(postImage.getStoredFileName());
 		}
 	}
 
 	@Nested
 	@DisplayName("이미지 삭제 테스트")
-	class DeleteImage {
+	class DeletePostImage {
 
 		@Test
 		@WithMockUser
@@ -157,10 +157,10 @@ class ImageControllerTest {
 		void success() throws Exception {
 			// given
 			fileInfo = fileUtil.saveFile(imageFile);
-			Image image = imageMockData.createImage(fileInfo);
+			PostImage postImage = imageMockData.createImage(fileInfo);
 
 			// when & then
-			mockMvc.perform(delete("/images/{imageId}", image.getId())
+			mockMvc.perform(delete("/images/{imageId}", postImage.getId())
 					.with(SecurityMockMvcRequestPostProcessors.user(userDetails)))
 				.andExpect(status().isNoContent());
 		}
@@ -171,10 +171,10 @@ class ImageControllerTest {
 		void notFoundImage() throws Exception {
 			// given
 			fileInfo = fileUtil.saveFile(imageFile);
-			Image image = imageMockData.createImage(fileInfo);
+			PostImage postImage = imageMockData.createImage(fileInfo);
 
 			// when & then
-			mockMvc.perform(delete("/images/{imageId}", image.getId() + 1)
+			mockMvc.perform(delete("/images/{imageId}", postImage.getId() + 1)
 					.with(SecurityMockMvcRequestPostProcessors.user(userDetails)))
 				.andExpect(status().isNotFound());
 		}

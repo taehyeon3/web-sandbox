@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.backendboard.domain.image.entity.Image;
+import com.backendboard.domain.postimage.entity.PostImage;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -33,8 +33,8 @@ public class FileInfo {
 			.build();
 	}
 
-	public static Image toEntity(FileInfo info) {
-		return Image.builder()
+	public static PostImage toEntity(FileInfo info) {
+		return PostImage.builder()
 			.originalFileName(info.originalFileName)
 			.storedFileName(info.storedFileName)
 			.imageType(info.contentType)

@@ -1,4 +1,4 @@
-package com.backendboard.domain.image.controller;
+package com.backendboard.domain.postimage.controller;
 
 import java.io.IOException;
 
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.backendboard.domain.image.dto.ImageCreateResponse;
-import com.backendboard.domain.image.dto.ImageReadResponse;
-import com.backendboard.domain.image.dto.ImageUpdateResponse;
-import com.backendboard.domain.image.service.ImageService;
+import com.backendboard.domain.postimage.dto.PostImageCreateResponse;
+import com.backendboard.domain.postimage.dto.PostImageReadResponse;
+import com.backendboard.domain.postimage.dto.PostImageUpdateResponse;
+import com.backendboard.domain.postimage.service.PostImageService;
 import com.backendboard.global.error.dto.ErrorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,8 +34,8 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/images")
-public class ImageController {
-	private final ImageService imageService;
+public class PostImageController {
+	private final PostImageService postImageService;
 
 	@Operation(
 		summary = "이미지 생성 API",
@@ -45,14 +45,14 @@ public class ImageController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "201", description = "201 성공",
 			content = @Content(
-				mediaType = "application/json", schema = @Schema(implementation = ImageCreateResponse.class))),
+				mediaType = "application/json", schema = @Schema(implementation = PostImageCreateResponse.class))),
 		@ApiResponse(responseCode = "400", description = "이미지 파일이 아닙니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ImageCreateResponse> createImage(@RequestParam("image") MultipartFile image)
+	public ResponseEntity<PostImageCreateResponse> createImage(@RequestParam("image") MultipartFile image)
 		throws IOException {
-		ImageCreateResponse response = imageService.uploadImage(image);
+		PostImageCreateResponse response = postImageService.uploadImage(image);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
@@ -64,13 +64,13 @@ public class ImageController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",
 			content = @Content(
-				mediaType = "application/json", schema = @Schema(implementation = ImageReadResponse.class))),
+				mediaType = "application/json", schema = @Schema(implementation = PostImageReadResponse.class))),
 		@ApiResponse(responseCode = "400", description = "이미지 파일이 아닙니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
 	@GetMapping("/{imageId}")
-	public ResponseEntity<ImageReadResponse> readImage(@PathVariable Long imageId) {
-		ImageReadResponse response = imageService.getImage(imageId);
+	public ResponseEntity<PostImageReadResponse> readImage(@PathVariable Long imageId) {
+		PostImageReadResponse response = postImageService.getImage(imageId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
@@ -82,16 +82,16 @@ public class ImageController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",
 			content = @Content(
-				mediaType = "application/json", schema = @Schema(implementation = ImageUpdateResponse.class))),
+				mediaType = "application/json", schema = @Schema(implementation = PostImageUpdateResponse.class))),
 		@ApiResponse(responseCode = "400", description = "이미지 파일이 아닙니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 		@ApiResponse(responseCode = "404", description = "이미지를 찾을 수 없습니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
 	@PutMapping(value = "/{imageId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ImageUpdateResponse> updateImage(@RequestParam("image") MultipartFile image,
+	public ResponseEntity<PostImageUpdateResponse> updateImage(@RequestParam("image") MultipartFile image,
 		@PathVariable Long imageId) throws IOException {
-		ImageUpdateResponse response = imageService.updateImage(imageId, image);
+		PostImageUpdateResponse response = postImageService.updateImage(imageId, image);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
@@ -109,7 +109,7 @@ public class ImageController {
 	})
 	@DeleteMapping("/{imageId}")
 	public ResponseEntity<Void> deleteImage(@PathVariable Long imageId) {
-		imageService.deleteImage(imageId);
+		postImageService.deleteImage(imageId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }
