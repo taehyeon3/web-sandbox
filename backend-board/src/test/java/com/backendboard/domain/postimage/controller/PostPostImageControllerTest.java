@@ -83,7 +83,7 @@ class PostPostImageControllerTest {
 			fileUtil.deleteFile(postImage.getStoredFileName());
 
 			// when & then
-			MvcResult result = mockMvc.perform(multipart("/images")
+			MvcResult result = mockMvc.perform(multipart("/post-images")
 					.file(imageFile)
 					.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 					.with(SecurityMockMvcRequestPostProcessors.user(userDetails)))
@@ -109,12 +109,26 @@ class PostPostImageControllerTest {
 			PostImage postImage = imageMockData.createImage(fileInfo);
 
 			// when & then
-			mockMvc.perform(get("/images/{imageId}", postImage.getId())
+			mockMvc.perform(get("/post-images/{imageId}", postImage.getId())
 					.with(SecurityMockMvcRequestPostProcessors.user(userDetails)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(postImage.getId()))
 				.andExpect(jsonPath("$.fileName").value(postImage.getOriginalFileName()))
 				.andExpect(jsonPath("$.fileUrl").value(postImage.getStoredFileName()));
+		}
+
+		@Test
+		@WithMockUser
+		@DisplayName("이미지를 찾을 수 없습니다. 404")
+		void notFoundImage() throws Exception {
+			// given
+			fileInfo = fileUtil.saveFile(imageFile);
+			PostImage postImage = imageMockData.createImage(fileInfo);
+
+			// when & then
+			mockMvc.perform(get("/post-images/{imageId}", postImage.getId() + 1)
+					.with(SecurityMockMvcRequestPostProcessors.user(userDetails)))
+				.andExpect(status().isNotFound());
 		}
 	}
 
@@ -131,7 +145,7 @@ class PostPostImageControllerTest {
 			PostImage postImage = imageMockData.createImage(fileInfo);
 
 			// when & then
-			mockMvc.perform(multipart("/images/{imageId}", postImage.getId())
+			mockMvc.perform(multipart("/post-images/{imageId}", postImage.getId())
 					.file(imageFile)
 					.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 					.with(SecurityMockMvcRequestPostProcessors.user(userDetails))
@@ -144,6 +158,26 @@ class PostPostImageControllerTest {
 				.andExpect(jsonPath("$.fileName").value(postImage.getOriginalFileName()))
 				.andExpect(jsonPath("$.fileUrl").value(postImage.getStoredFileName()));
 			fileUtil.deleteFile(postImage.getStoredFileName());
+		}
+
+		@Test
+		@WithMockUser
+		@DisplayName("이미지를 찾을 수 없습니다. 404")
+		void notFoundImage() throws Exception {
+			// given
+			fileInfo = fileUtil.saveFile(imageFile);
+			PostImage postImage = imageMockData.createImage(fileInfo);
+
+			// when & then
+			mockMvc.perform(multipart("/post-images/{imageId}", postImage.getId() + 1)
+					.file(imageFile)
+					.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+					.with(SecurityMockMvcRequestPostProcessors.user(userDetails))
+					.with(request -> {
+						request.setMethod("PUT");
+						return request;
+					}))
+				.andExpect(status().isNotFound());
 		}
 	}
 
@@ -160,7 +194,7 @@ class PostPostImageControllerTest {
 			PostImage postImage = imageMockData.createImage(fileInfo);
 
 			// when & then
-			mockMvc.perform(delete("/images/{imageId}", postImage.getId())
+			mockMvc.perform(delete("/post-images/{imageId}", postImage.getId())
 					.with(SecurityMockMvcRequestPostProcessors.user(userDetails)))
 				.andExpect(status().isNoContent());
 		}
@@ -174,7 +208,7 @@ class PostPostImageControllerTest {
 			PostImage postImage = imageMockData.createImage(fileInfo);
 
 			// when & then
-			mockMvc.perform(delete("/images/{imageId}", postImage.getId() + 1)
+			mockMvc.perform(delete("/post-images/{imageId}", postImage.getId() + 1)
 					.with(SecurityMockMvcRequestPostProcessors.user(userDetails)))
 				.andExpect(status().isNotFound());
 		}
