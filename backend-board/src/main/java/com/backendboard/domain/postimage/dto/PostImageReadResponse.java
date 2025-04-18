@@ -1,6 +1,6 @@
-package com.backendboard.domain.image.dto;
+package com.backendboard.domain.postimage.dto;
 
-import com.backendboard.domain.image.entity.Image;
+import com.backendboard.domain.postimage.entity.PostImage;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Schema(description = "이미지 보기 응답 DTO")
 @Getter
-public class ImageReadResponse {
+public class PostImageReadResponse {
 	@Schema(description = "이미지 아이디", example = "1")
 	private final Long id;
 
@@ -19,17 +19,17 @@ public class ImageReadResponse {
 	private final String fileUrl;
 
 	@Builder
-	private ImageReadResponse(Long id, String fileName, String fileUrl) {
+	private PostImageReadResponse(Long id, String fileName, String fileUrl) {
 		this.id = id;
 		this.fileName = fileName;
 		this.fileUrl = fileUrl;
 	}
 
-	public static ImageReadResponse toDto(Image image) {
-		return ImageReadResponse.builder()
-			.id(image.getId())
-			.fileName(image.getOriginalFileName())
-			.fileUrl(image.getStoredFileName())
+	public static PostImageReadResponse toDto(PostImage postImage) {
+		return PostImageReadResponse.builder()
+			.id(postImage.getId())
+			.fileName(postImage.getOriginalFileName())
+			.fileUrl(postImage.getStoredFileName())
 			.build();
 	}
 }

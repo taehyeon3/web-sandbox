@@ -1,4 +1,4 @@
-package com.backendboard.domain.image.service;
+package com.backendboard.domain.postimage.service;
 
 import java.io.IOException;
 
@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.backendboard.domain.image.dto.ImageCreateResponse;
-import com.backendboard.domain.image.dto.ImageReadResponse;
-import com.backendboard.domain.image.dto.ImageUpdateResponse;
-import com.backendboard.domain.image.entity.Image;
-import com.backendboard.domain.image.repository.ImageRepository;
+import com.backendboard.domain.postimage.dto.PostImageCreateResponse;
+import com.backendboard.domain.postimage.dto.PostImageReadResponse;
+import com.backendboard.domain.postimage.dto.PostImageUpdateResponse;
+import com.backendboard.domain.postimage.entity.PostImage;
+import com.backendboard.domain.postimage.repository.PostImageRepository;
 import com.backendboard.global.error.CustomError;
 import com.backendboard.global.error.CustomException;
 import com.backendboard.global.util.FileUtil;
@@ -21,50 +21,50 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
-public class ImageServiceImpl implements ImageService {
-	private final ImageRepository imageRepository;
+public class PostImageServiceImpl implements PostImageService {
+	private final PostImageRepository postImageRepository;
 	private final FileUtil fileUtil;
 
 	@Transactional
 	@Override
-	public ImageCreateResponse uploadImage(MultipartFile multipartFile) throws IOException {
+	public PostImageCreateResponse uploadImage(MultipartFile multipartFile) throws IOException {
 		String fileType = fileUtil.getFileType(multipartFile.getOriginalFilename());
 		validateImageType(fileType);
 
 		FileInfo fileInfo = fileUtil.saveFile(multipartFile);
-		Image image = FileInfo.toEntity(fileInfo);
-		imageRepository.save(image);
-		return ImageCreateResponse.toDto(image);
+		PostImage postImage = FileInfo.toEntity(fileInfo);
+		postImageRepository.save(postImage);
+		return PostImageCreateResponse.toDto(postImage);
 	}
 
 	@Override
-	public ImageReadResponse getImage(Long imageId) {
-		Image image = imageRepository.findById(imageId)
+	public PostImageReadResponse getImage(Long imageId) {
+		PostImage postImage = postImageRepository.findById(imageId)
 			.orElseThrow(() -> new CustomException(CustomError.IMAGE_NOT_FOUND));
-		return ImageReadResponse.toDto(image);
+		return PostImageReadResponse.toDto(postImage);
 	}
 
 	@Transactional
 	@Override
-	public ImageUpdateResponse updateImage(Long imageId, MultipartFile multipartFile) throws IOException {
+	public PostImageUpdateResponse updateImage(Long imageId, MultipartFile multipartFile) throws IOException {
 		String fileType = fileUtil.getFileType(multipartFile.getOriginalFilename());
 		validateImageType(fileType);
 
-		Image image = imageRepository.findById(imageId)
+		PostImage postImage = postImageRepository.findById(imageId)
 			.orElseThrow(() -> new CustomException(CustomError.IMAGE_NOT_FOUND));
-		fileUtil.deleteFile(image.getStoredFileName());
+		fileUtil.deleteFile(postImage.getStoredFileName());
 		FileInfo fileInfo = fileUtil.saveFile(multipartFile);
-		image.updateFile(fileInfo);
-		return ImageUpdateResponse.toDto(image);
+		postImage.updateFile(fileInfo);
+		return PostImageUpdateResponse.toDto(postImage);
 	}
 
 	@Transactional
 	@Override
 	public void deleteImage(Long imageId) {
-		Image image = imageRepository.findById(imageId)
+		PostImage postImage = postImageRepository.findById(imageId)
 			.orElseThrow(() -> new CustomException(CustomError.IMAGE_NOT_FOUND));
-		fileUtil.deleteFile(image.getStoredFileName());
-		imageRepository.delete(image);
+		fileUtil.deleteFile(postImage.getStoredFileName());
+		postImageRepository.delete(postImage);
 	}
 
 	private void validateImageType(String fileType) {

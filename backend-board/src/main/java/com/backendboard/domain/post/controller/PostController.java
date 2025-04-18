@@ -1,4 +1,4 @@
-package com.backendboard.domain.comment.controller;
+package com.backendboard.domain.post.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backendboard.domain.comment.dto.CommentCreateRequest;
-import com.backendboard.domain.comment.dto.CommentCreateResponse;
-import com.backendboard.domain.comment.dto.CommentReadResponse;
-import com.backendboard.domain.comment.dto.CommentUpdateRequest;
-import com.backendboard.domain.comment.dto.CommentUpdateResponse;
-import com.backendboard.domain.comment.service.CommentService;
+import com.backendboard.domain.post.dto.PostCreateRequest;
+import com.backendboard.domain.post.dto.PostCreateResponse;
+import com.backendboard.domain.post.dto.PostReadResponse;
+import com.backendboard.domain.post.dto.PostUpdateRequest;
+import com.backendboard.domain.post.dto.PostUpdateResponse;
+import com.backendboard.domain.post.service.PostService;
 import com.backendboard.global.error.dto.ErrorResponse;
 import com.backendboard.global.security.dto.CustomUserDetails;
 
@@ -31,89 +31,89 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "댓글", description = "댓글 관련 API")
-@RequiredArgsConstructor
+@Tag(name = "게시판", description = "게시판 관련 API")
 @RestController
-@RequestMapping("/comments")
-public class CommentController {
-	private final CommentService commentService;
+@RequiredArgsConstructor
+@RequestMapping("/posts")
+public class PostController {
+	private final PostService postService;
 
 	@Operation(
-		summary = "댓글 생성 API",
-		description = "새로운 댓글을 생성합니다.",
+		summary = "게시글 생성 API",
+		description = "새로운 게시글을 생성합니다.",
 		security = {@SecurityRequirement(name = "bearerAuth")}
 	)
 	@ApiResponses({
 		@ApiResponse(responseCode = "201", description = "201 성공",
 			content = @Content(
-				mediaType = "application/json", schema = @Schema(implementation = CommentCreateResponse.class))),
+				mediaType = "application/json", schema = @Schema(implementation = PostCreateResponse.class))),
 		@ApiResponse(responseCode = "400", description = "잘못된 요청입니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
 	@PostMapping
-	public ResponseEntity<CommentCreateResponse> createComment(
+	public ResponseEntity<PostCreateResponse> createPost(
 		@AuthenticationPrincipal CustomUserDetails customUserDetails,
-		@RequestBody @Valid CommentCreateRequest request) {
-		CommentCreateResponse response = commentService.createComment(request, customUserDetails.getId());
+		@RequestBody @Valid PostCreateRequest request) {
+		PostCreateResponse response = postService.createPost(request, customUserDetails.getId());
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@Operation(
-		summary = "댓글 수정 API",
-		description = "댓글을 수정합니다.",
+		summary = "게시긇 수정 API",
+		description = "게시글을 수정합니다.",
 		security = {@SecurityRequirement(name = "bearerAuth")}
 	)
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",
 			content = @Content(
-				mediaType = "application/json", schema = @Schema(implementation = CommentUpdateResponse.class))),
+				mediaType = "application/json", schema = @Schema(implementation = PostUpdateResponse.class))),
 		@ApiResponse(responseCode = "400", description = "잘못된 요청입니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 		@ApiResponse(responseCode = "403", description = "작성자가 아닙니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-		@ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없습니다.",
+		@ApiResponse(responseCode = "404", description = "게시글을 찾을 수 없습니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
-	@PutMapping("/{commentId}")
-	public ResponseEntity<CommentUpdateResponse> updateComment(
+	@PutMapping("/{postId}")
+	public ResponseEntity<PostUpdateResponse> updatePost(
 		@AuthenticationPrincipal CustomUserDetails customUserDetails,
-		@RequestBody @Valid CommentUpdateRequest request, @PathVariable Long commentId) {
-		CommentUpdateResponse response = commentService.updateComment(request, commentId, customUserDetails.getId());
+		@RequestBody @Valid PostUpdateRequest request, @PathVariable Long postId) {
+		PostUpdateResponse response = postService.updatePost(request, postId, customUserDetails.getId());
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@Operation(
-		summary = "댓글 보기 API",
-		description = "댓글을 보여줍니다.",
+		summary = "게시글 보기 API",
+		description = "게시글을 보여줍니다.",
 		security = {@SecurityRequirement(name = "bearerAuth")}
 	)
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",
 			content = @Content(
-				mediaType = "application/json", schema = @Schema(implementation = CommentReadResponse.class))),
-		@ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없습니다.",
+				mediaType = "application/json", schema = @Schema(implementation = PostReadResponse.class))),
+		@ApiResponse(responseCode = "404", description = "게시글을 찾을 수 없습니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
-	@GetMapping("/{commentId}")
-	public ResponseEntity<CommentReadResponse> readComment(@PathVariable Long commentId) {
-		CommentReadResponse response = commentService.getComment(commentId);
+	@GetMapping("/{postId}")
+	public ResponseEntity<PostReadResponse> readPost(@PathVariable Long postId) {
+		PostReadResponse response = postService.getPost(postId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@Operation(
-		summary = "댓글 삭제 API",
-		description = "댓글을 삭제합니다.",
+		summary = "게시글 삭제 API",
+		description = "게시글을 삭제합니다.",
 		security = {@SecurityRequirement(name = "bearerAuth")}
 	)
 	@ApiResponses({
 		@ApiResponse(responseCode = "204", description = "204 성공", content = @Content()),
-		@ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없습니다.",
+		@ApiResponse(responseCode = "404", description = "게시글을 찾을 수 없습니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
-	@DeleteMapping("/{commentId}")
-	public ResponseEntity<Void> deleteComment(
-		@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long commentId) {
-		commentService.deleteComment(commentId, customUserDetails.getId());
+	@DeleteMapping("/{postId}")
+	public ResponseEntity<Void> deletePost(
+		@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long postId) {
+		postService.deletePost(postId, customUserDetails.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }

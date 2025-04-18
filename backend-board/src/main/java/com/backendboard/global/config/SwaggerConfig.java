@@ -13,6 +13,14 @@ import io.swagger.v3.oas.models.servers.Server;
 @Configuration
 public class SwaggerConfig {
 	@Bean
+	public GroupedOpenApi post() {
+		return GroupedOpenApi.builder()
+			.group("게시글 관련 API")
+			.pathsToMatch("/posts/**")
+			.build();
+	}
+
+	@Bean
 	public GroupedOpenApi like() {
 		return GroupedOpenApi.builder()
 			.group("좋아요 관련 API")
@@ -24,7 +32,7 @@ public class SwaggerConfig {
 	public GroupedOpenApi image() {
 		return GroupedOpenApi.builder()
 			.group("이미지 관련 API")
-			.pathsToMatch("/images/**", "/image-collections/**")
+			.pathsToMatch("/post-images/**")
 			.build();
 	}
 
