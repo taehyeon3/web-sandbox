@@ -51,7 +51,7 @@ public class CommentController {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
 	@PostMapping
-	public ResponseEntity<CommentCreateResponse> createComments(
+	public ResponseEntity<CommentCreateResponse> createComment(
 		@AuthenticationPrincipal CustomUserDetails customUserDetails,
 		@RequestBody @Valid CommentCreateRequest request) {
 		CommentCreateResponse response = commentService.createComment(request, customUserDetails.getId());

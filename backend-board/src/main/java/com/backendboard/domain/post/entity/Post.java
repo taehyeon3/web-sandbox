@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,5 +29,21 @@ public class Post {
 	private String content;
 
 	@Column(nullable = false)
-	private Long imageCollectionId;
+	private Long likeCount;
+
+	@Column(nullable = false)
+	private Long viewCount;
+
+	@Column(nullable = false)
+	private boolean isDeleted;
+
+	@Builder
+	private Post(String author, String title, String content) {
+		this.author = author;
+		this.title = title;
+		this.content = content;
+		this.isDeleted = false;
+		this.likeCount = 0L;
+		this.viewCount = 0L;
+	}
 }

@@ -30,10 +30,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "이미지", description = "이미지 관련 API")
+@Tag(name = "게시글 이미지", description = "게시글 이미지 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/images")
+@RequestMapping("/post-images")
 public class PostImageController {
 	private final PostImageService postImageService;
 
