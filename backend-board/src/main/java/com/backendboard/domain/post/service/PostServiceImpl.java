@@ -49,7 +49,10 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public PostReadResponse getPost(Long postId) {
-		return null;
+		Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(CustomError.POST_NOT_FOUND));
+		User user = userRepository.findById(post.getUserId())
+			.orElseThrow(() -> new CustomException(CustomError.USER_NOT_FOUND));
+		return PostReadResponse.toDto(post, user.getNickname());
 	}
 
 	@Transactional
