@@ -25,11 +25,11 @@ public class PostCreateRequest {
 		this.content = content;
 	}
 
-	public static Post toEntity(PostCreateRequest dto, String author) {
+	public static Post toEntity(PostCreateRequest dto, Long userId) {
 		return Post.builder()
 			.title(dto.title)
 			.content(dto.content)
-			.author(author)
+			.userId(userId)
 			.build();
 	}
 }

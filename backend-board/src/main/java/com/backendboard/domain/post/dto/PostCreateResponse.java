@@ -39,10 +39,10 @@ public class PostCreateResponse {
 
 	@Builder
 
-	public static PostCreateResponse toDto(Post post) {
+	public static PostCreateResponse toDto(Post post, String author) {
 		return PostCreateResponse.builder()
 			.id(post.getId())
-			.author(post.getAuthor())
+			.author(author)
 			.title(post.getTitle())
 			.content(post.getContent())
 			.likeCount(post.getLikeCount())

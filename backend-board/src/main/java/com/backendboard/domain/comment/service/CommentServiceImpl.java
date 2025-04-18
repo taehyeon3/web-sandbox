@@ -42,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
 
 		validateAuthor(comment, user);
 
-		comment.updateContent(request.getContent());
+		comment.update(request.getContent());
 		return CommentUpdateResponse.toDto(comment, user.getNickname());
 	}
 

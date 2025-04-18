@@ -20,7 +20,7 @@ public class Post {
 	private Long id;
 
 	@Column(nullable = false)
-	private String author;
+	private Long userId;
 
 	@Column(nullable = false, columnDefinition = "VARCHAR(100)")
 	private String title;
@@ -39,12 +39,17 @@ public class Post {
 	private boolean isDeleted;
 
 	@Builder
-	private Post(String author, String title, String content) {
-		this.author = author;
+	private Post(Long userId, String title, String content) {
+		this.userId = userId;
 		this.title = title;
 		this.content = content;
 		this.isDeleted = false;
 		this.likeCount = 0L;
 		this.viewCount = 0L;
+	}
+
+	public void update(String title, String content) {
+		this.title = title;
+		this.content = content;
 	}
 }

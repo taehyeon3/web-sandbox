@@ -13,6 +13,8 @@ import com.backendboard.domain.post.respository.PostRepository;
 import com.backendboard.domain.postimage.repository.PostImageRepository;
 import com.backendboard.domain.user.entity.User;
 import com.backendboard.domain.user.repository.UserRepository;
+import com.backendboard.global.error.CustomError;
+import com.backendboard.global.error.CustomException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,14 +30,21 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public PostCreateResponse createPost(PostCreateRequest request, Long authUserId) {
 		User user = userRepository.getByAuthUserId(authUserId);
-		Post post = PostCreateRequest.toEntity(request, user.getNickname());
+		Post post = PostCreateRequest.toEntity(request, user.getId());
 		postRepository.save(post);
-		return PostCreateResponse.toDto(post);
+		return PostCreateResponse.toDto(post, user.getNickname());
 	}
 
+	@Transactional
 	@Override
 	public PostUpdateResponse updatePost(PostUpdateRequest request, Long postId, Long authUserId) {
-		return null;
+		User user = userRepository.getByAuthUserId(authUserId);
+		Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(CustomError.POST_NOT_FOUND));
+
+		validateAuthor(post, user);
+
+		post.update(request.getTitle(), request.getContent());
+		return PostUpdateResponse.toDto(post, user.getNickname());
 	}
 
 	@Override
@@ -43,7 +52,14 @@ public class PostServiceImpl implements PostService {
 		return null;
 	}
 
+	@Transactional
 	@Override
 	public void deletePost(Long postId, Long authUserId) {
+	}
+
+	public void validateAuthor(Post post, User user) {
+		if (post.getUserId() != user.getId()) {
+			throw new CustomException(CustomError.POST_NOT_AUTHOR);
+		}
 	}
 }
