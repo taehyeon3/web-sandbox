@@ -1,5 +1,7 @@
 package com.backendboard.domain.post.controller;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backendboard.domain.post.dto.PostCreateRequest;
 import com.backendboard.domain.post.dto.PostCreateResponse;
 import com.backendboard.domain.post.dto.PostReadResponse;
+import com.backendboard.domain.post.dto.PostSliceResponse;
 import com.backendboard.domain.post.dto.PostUpdateRequest;
 import com.backendboard.domain.post.dto.PostUpdateResponse;
 import com.backendboard.domain.post.service.PostService;
@@ -115,5 +118,21 @@ public class PostController {
 		@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long postId) {
 		postService.deletePost(postId, customUserDetails.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@Operation(
+		summary = "게시글 슬라이스 API",
+		description = "게시글을 슬라이스로 보여줍니다.",
+		security = {@SecurityRequirement(name = "bearerAuth")}
+	)
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "200 성공",
+			content = @Content(
+				mediaType = "application/json", schema = @Schema(implementation = PostSliceResponse.class))),
+	})
+	@GetMapping()
+	public ResponseEntity<Slice<PostSliceResponse>> getPostsSlice(Pageable pageable) {
+		Slice<PostSliceResponse> response = postService.getPostsSlice(pageable);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }

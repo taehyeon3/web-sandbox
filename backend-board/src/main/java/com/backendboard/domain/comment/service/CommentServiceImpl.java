@@ -88,7 +88,6 @@ public class CommentServiceImpl implements CommentService {
 			User user = userMap.get(comment.getUserId());
 			return CommentSliceResponse.toDto(comment, user.getNickname());
 		});
-
 	}
 
 	public void validateAuthor(Comment comment, User user) {
