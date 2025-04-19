@@ -14,7 +14,7 @@ public class PostMockData {
 	private final PostRepository postRepository;
 
 	public Post createPost(User user) {
-		Post post = Post.builder().title("제목 입니다.").content("내용 입니다.").userId(user.getId()).build();
+		Post post = Post.builder().title("제목").content("내용").userId(user.getId()).build();
 		return postRepository.save(post);
 	}
 }
