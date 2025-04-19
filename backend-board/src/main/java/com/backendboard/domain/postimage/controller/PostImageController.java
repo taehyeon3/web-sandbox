@@ -2,6 +2,8 @@ package com.backendboard.domain.postimage.controller;
 
 import java.io.IOException;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.backendboard.domain.postimage.dto.PostImageCreateResponse;
 import com.backendboard.domain.postimage.dto.PostImageReadResponse;
+import com.backendboard.domain.postimage.dto.PostImageSliceResponse;
 import com.backendboard.domain.postimage.dto.PostImageUpdateResponse;
 import com.backendboard.domain.postimage.service.PostImageService;
 import com.backendboard.global.error.dto.ErrorResponse;
@@ -65,7 +68,7 @@ public class PostImageController {
 		@ApiResponse(responseCode = "200", description = "200 성공",
 			content = @Content(
 				mediaType = "application/json", schema = @Schema(implementation = PostImageReadResponse.class))),
-		@ApiResponse(responseCode = "400", description = "이미지 파일이 아닙니다.",
+		@ApiResponse(responseCode = "404", description = "이미지를 찾을 수 없습니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
 	@GetMapping("/{imageId}")
@@ -83,8 +86,6 @@ public class PostImageController {
 		@ApiResponse(responseCode = "200", description = "200 성공",
 			content = @Content(
 				mediaType = "application/json", schema = @Schema(implementation = PostImageUpdateResponse.class))),
-		@ApiResponse(responseCode = "400", description = "이미지 파일이 아닙니다.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 		@ApiResponse(responseCode = "404", description = "이미지를 찾을 수 없습니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
@@ -111,5 +112,21 @@ public class PostImageController {
 	public ResponseEntity<Void> deleteImage(@PathVariable Long imageId) {
 		postImageService.deleteImage(imageId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@Operation(
+		summary = "이미지 슬라이스 API",
+		description = "이미지 슬라이스를 보여줍니다.",
+		security = {@SecurityRequirement(name = "bearerAuth")}
+	)
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "200 성공",
+			content = @Content(
+				mediaType = "application/json", schema = @Schema(implementation = PostImageSliceResponse.class))),
+	})
+	@GetMapping("/posts/{postId}")
+	public ResponseEntity<Slice<PostImageSliceResponse>> getImagesSlice(@PathVariable Long postId, Pageable pageable) {
+		Slice<PostImageSliceResponse> response = postImageService.getImagesSlice(postId, pageable);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }
