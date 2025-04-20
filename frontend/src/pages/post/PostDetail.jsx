@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useParams} from 'react-router-dom';
-import LogoLink from "../components/LogoLink.jsx";
+import LogoLink from "../../components/LogoLink.jsx";
+import api from "../../api/axiosInstance.jsx"
 
 const PostDetail = () => {
     const {id} = useParams();
@@ -9,10 +10,11 @@ const PostDetail = () => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        fetch(`/api/posts/${id}`)
+        api.get(`/posts/${id}`)
             .then(res => {
-                if (!res.ok) throw new Error('게시글을 불러올 수 없습니다.');
-                return res.json();
+                if (res.status !== 200)
+                    throw new Error('게시글을 불러올 수 없습니다.');
+                return res.data;
             })
             .then(data => setPost(data))
             .catch(err => setError(err.message))

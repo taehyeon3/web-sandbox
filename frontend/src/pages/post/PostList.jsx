@@ -1,8 +1,9 @@
 // src/components/PotatoPostList.jsx
 import React, {useEffect, useState} from 'react';
-import {Link} from 'react-router-dom';
-import LogoLink from "../components/LogoLink.jsx";
-import '../style/PostList.css';
+import {Link, useNavigate} from 'react-router-dom';
+import LogoLink from "../../components/LogoLink.jsx";
+import '../../style/PostList.css';
+import api from "../../api/axiosInstance.jsx"
 
 const PAGE_SIZE = 10;
 
@@ -11,6 +12,8 @@ const PostList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [page, setPage] = useState(0);
+    const navigate = useNavigate();
+    const isLoggedIn = localStorage.getItem('user');
 
     const [pageInfo, setPageInfo] = useState({
         first: true,
@@ -21,11 +24,11 @@ const PostList = () => {
     });
 
     useEffect(() => {
-        fetch(`/api/posts?page=${page}&size=${PAGE_SIZE}`)
+        api.get(`/posts?page=${page}&size=${PAGE_SIZE}`)
             .then(res => {
-                if (!res.ok)
+                if (res.status !== 200)
                     throw new Error('게시글을 불러올 수 없습니다.');
-                return res.json();
+                return res.data;
             })
             .then(data => {
                 setPosts(data.content);
@@ -82,6 +85,15 @@ const PostList = () => {
             <div className="text-center mb-4">
                 <LogoLink width="120"/>
                 <h1 className="potato-title">감자나라 커뮤니티</h1>
+                {isLoggedIn && (
+                    <button
+                        className="potato-home-button"
+                        onClick={() => navigate('/posts/create')}
+                        style={{marginTop: '10px', color: '#F5F5F5'}}
+                    >
+                        게시글 작성
+                    </button>
+                )}
             </div>
             {loading && <div>로딩 중...</div>}
             {error && <div className="alert alert-danger">{error}</div>}
