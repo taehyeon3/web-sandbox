@@ -22,7 +22,7 @@ public class Post {
 	@Column(nullable = false)
 	private Long userId;
 
-	@Column(nullable = false, columnDefinition = "VARCHAR(100)")
+	@Column(nullable = false, columnDefinition = "VARCHAR(200)")
 	private String title;
 
 	@Lob
