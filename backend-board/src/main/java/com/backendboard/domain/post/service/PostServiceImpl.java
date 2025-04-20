@@ -1,11 +1,19 @@
 package com.backendboard.domain.post.service;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.backendboard.domain.post.dto.PostCreateRequest;
 import com.backendboard.domain.post.dto.PostCreateResponse;
 import com.backendboard.domain.post.dto.PostReadResponse;
+import com.backendboard.domain.post.dto.PostSliceResponse;
 import com.backendboard.domain.post.dto.PostUpdateRequest;
 import com.backendboard.domain.post.dto.PostUpdateResponse;
 import com.backendboard.domain.post.entity.Post;
@@ -64,6 +72,21 @@ public class PostServiceImpl implements PostService {
 		validateAuthor(post, user);
 
 		post.delete();
+	}
+
+	@Override
+	public Slice<PostSliceResponse> getPostsSlice(Pageable pageable) {
+		Slice<Post> posts = postRepository.findBy(pageable);
+
+		Set<Long> userIds = posts.stream().map(Post::getUserId).collect(Collectors.toSet());
+
+		Map<Long, User> userMap = userRepository.findAllById(userIds)
+			.stream().collect(Collectors.toMap(User::getId, Function.identity()));
+
+		return posts.map(post -> {
+			User user = userMap.get(post.getUserId());
+			return PostSliceResponse.toDto(post, user.getNickname());
+		});
 	}
 
 	public void validateAuthor(Post post, User user) {

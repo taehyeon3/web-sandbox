@@ -6,9 +6,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
-@Schema(description = "댓글 보기 응답 DTO")
+@Schema(description = "댓글 슬라이스 응답 DTO")
 @Getter
-public class CommentReadResponse {
+public class CommentSliceResponse {
 	@Schema(description = "댓글 아이디", example = "1")
 	private final Long id;
 
@@ -22,15 +22,15 @@ public class CommentReadResponse {
 	private final String content;
 
 	@Builder
-	private CommentReadResponse(Long id, Long postId, String author, String content) {
+	private CommentSliceResponse(Long id, Long postId, String author, String content) {
 		this.id = id;
 		this.postId = postId;
 		this.author = author;
 		this.content = content;
 	}
 
-	public static CommentReadResponse toDto(Comment comment, String author) {
-		return CommentReadResponse.builder()
+	public static CommentSliceResponse toDto(Comment comment, String author) {
+		return CommentSliceResponse.builder()
 			.id(comment.getId())
 			.postId(comment.getPostId())
 			.content(comment.getContent())

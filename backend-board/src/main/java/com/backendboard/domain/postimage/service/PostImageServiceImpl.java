@@ -2,12 +2,15 @@ package com.backendboard.domain.postimage.service;
 
 import java.io.IOException;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.backendboard.domain.postimage.dto.PostImageCreateResponse;
 import com.backendboard.domain.postimage.dto.PostImageReadResponse;
+import com.backendboard.domain.postimage.dto.PostImageSliceResponse;
 import com.backendboard.domain.postimage.dto.PostImageUpdateResponse;
 import com.backendboard.domain.postimage.entity.PostImage;
 import com.backendboard.domain.postimage.repository.PostImageRepository;
@@ -54,7 +57,8 @@ public class PostImageServiceImpl implements PostImageService {
 			.orElseThrow(() -> new CustomException(CustomError.IMAGE_NOT_FOUND));
 		fileUtil.deleteFile(postImage.getStoredFileName());
 		FileInfo fileInfo = fileUtil.saveFile(multipartFile);
-		postImage.updateFile(fileInfo);
+		postImage.update(fileInfo.getOriginalFileName(), fileInfo.getStoredFileName(), fileInfo.getContentType(),
+			fileInfo.getFileSize());
 		return PostImageUpdateResponse.toDto(postImage);
 	}
 
@@ -65,6 +69,11 @@ public class PostImageServiceImpl implements PostImageService {
 			.orElseThrow(() -> new CustomException(CustomError.IMAGE_NOT_FOUND));
 		fileUtil.deleteFile(postImage.getStoredFileName());
 		postImageRepository.delete(postImage);
+	}
+
+	@Override
+	public Slice<PostImageSliceResponse> getImagesSlice(Long postId, Pageable pageable) {
+		return postImageRepository.findByPostId(postId, pageable).map(PostImageSliceResponse::toDto);
 	}
 
 	private void validateImageType(String fileType) {

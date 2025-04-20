@@ -1,5 +1,7 @@
 package com.backendboard.domain.comment.controller;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backendboard.domain.comment.dto.CommentCreateRequest;
 import com.backendboard.domain.comment.dto.CommentCreateResponse;
 import com.backendboard.domain.comment.dto.CommentReadResponse;
+import com.backendboard.domain.comment.dto.CommentSliceResponse;
 import com.backendboard.domain.comment.dto.CommentUpdateRequest;
 import com.backendboard.domain.comment.dto.CommentUpdateResponse;
 import com.backendboard.domain.comment.service.CommentService;
@@ -115,5 +118,21 @@ public class CommentController {
 		@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long commentId) {
 		commentService.deleteComment(commentId, customUserDetails.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@Operation(
+		summary = "댓글 슬라이스 보기 API",
+		description = "댓글을 슬라이스로 보여줍니다.",
+		security = {@SecurityRequirement(name = "bearerAuth")}
+	)
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "200 성공",
+			content = @Content(
+				mediaType = "application/json", schema = @Schema(implementation = CommentSliceResponse.class))),
+	})
+	@GetMapping("/posts/{postId}")
+	public ResponseEntity<Slice<CommentSliceResponse>> readComment(@PathVariable Long postId, Pageable pageable) {
+		Slice<CommentSliceResponse> response = commentService.getCommetsSlice(postId, pageable);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }

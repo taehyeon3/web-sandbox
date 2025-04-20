@@ -1,7 +1,6 @@
 package com.backendboard.domain.postimage.entity;
 
 import com.backendboard.global.entity.BaseEntity;
-import com.backendboard.global.util.dto.FileInfo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,10 +47,10 @@ public class PostImage extends BaseEntity {
 		postId = null;
 	}
 
-	public void updateFile(FileInfo info) {
-		this.originalFileName = info.getOriginalFileName();
-		this.storedFileName = info.getStoredFileName();
-		this.imageType = info.getContentType();
-		this.fileSize = info.getFileSize();
+	public void update(String originalFileName, String storedFileName, String imageType, Long fileSize) {
+		this.originalFileName = originalFileName;
+		this.storedFileName = storedFileName;
+		this.imageType = imageType;
+		this.fileSize = fileSize;
 	}
 }

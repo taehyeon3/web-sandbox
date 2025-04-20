@@ -1,8 +1,12 @@
 package com.backendboard.domain.post.service;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+
 import com.backendboard.domain.post.dto.PostCreateRequest;
 import com.backendboard.domain.post.dto.PostCreateResponse;
 import com.backendboard.domain.post.dto.PostReadResponse;
+import com.backendboard.domain.post.dto.PostSliceResponse;
 import com.backendboard.domain.post.dto.PostUpdateRequest;
 import com.backendboard.domain.post.dto.PostUpdateResponse;
 
@@ -14,4 +18,6 @@ public interface PostService {
 	PostReadResponse getPost(Long postId);
 
 	void deletePost(Long postId, Long authUserId);
+
+	Slice<PostSliceResponse> getPostsSlice(Pageable pageable);
 }
