@@ -35,27 +35,27 @@ public class CustomLogoutFilter extends GenericFilterBean {
 		String method = request.getMethod();
 
 		if (!requestUri.matches("^/logout$") || !method.equals("POST")) {
-			log.debug("CustomLogoutFilter : CustomLogout 요청이 아님");
+			log.info("CustomLogoutFilter : CustomLogout 요청이 아님");
 			filterChain.doFilter(request, response);
 			return;
 		}
 
 		String refreshToken = jwtUtil.extractedRefreshToken(request.getCookies());
 
-		if (refreshToken == null || !jwtUtil.getType(refreshToken).equals("refresh")) {
-			log.debug("CustomLogoutFilter : refresh 토큰폼이 아님");
+		if (jwtUtil.isExpired(refreshToken)) {
+			log.info("CustomLogoutFilter : refreshToken이 만료됨");
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
-
-		if (jwtUtil.isExpired(refreshToken)) {
-			log.debug("CustomLogoutFilter : refreshToken이 만료됨");
+		
+		if (refreshToken == null || !jwtUtil.getType(refreshToken).equals("refresh")) {
+			log.info("CustomLogoutFilter : refresh 토큰폼이 아님");
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
 
 		if (!refreshTokenService.isValidRefreshToken(refreshToken)) {
-			log.debug("CustomLogoutFilter : refreshToken이 유효하지 않음");
+			log.info("CustomLogoutFilter : refreshToken이 유효하지 않음");
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
