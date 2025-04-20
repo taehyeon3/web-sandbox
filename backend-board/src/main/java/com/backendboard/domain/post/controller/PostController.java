@@ -130,7 +130,7 @@ public class PostController {
 			content = @Content(
 				mediaType = "application/json", schema = @Schema(implementation = PostSliceResponse.class))),
 	})
-	@GetMapping()
+	@GetMapping
 	public ResponseEntity<Slice<PostSliceResponse>> getPostsSlice(Pageable pageable) {
 		Slice<PostSliceResponse> response = postService.getPostsSlice(pageable);
 		return ResponseEntity.status(HttpStatus.OK).body(response);

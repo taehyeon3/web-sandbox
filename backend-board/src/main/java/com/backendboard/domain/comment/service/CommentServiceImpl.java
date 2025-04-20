@@ -77,7 +77,7 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	public Slice<CommentSliceResponse> getCommetsSlice(Long postId, Pageable pageable) {
-		Slice<Comment> comments = commentRepository.findByPostId(postId, pageable);
+		Slice<Comment> comments = commentRepository.findByPostIdAndDeleted(postId, false, pageable);
 
 		Set<Long> userIds = comments.stream().map(Comment::getUserId).collect(Collectors.toSet());
 

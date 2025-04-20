@@ -9,5 +9,5 @@ import com.backendboard.domain.comment.entity.Comment;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-	Slice<Comment> findByPostId(Long postId, Pageable pageable);
+	Slice<Comment> findByPostIdAndDeleted(Long postId, boolean isDeleted, Pageable pageable);
 }
