@@ -21,18 +21,6 @@
     font-size: 1rem;
 }
 
-.potato-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.potato-btn:active,
-.potato-btn-active {
-    background-color: #d2b16c;
-    color: #fff;
-    transform: scale(0.97);
-}
-
 .potato-page-label {
     margin: 0 8px;
     font-weight: bold;

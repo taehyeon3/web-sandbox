@@ -1,9 +1,9 @@
 // src/components/PotatoPostList.jsx
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import LogoLink from "../../components/LogoLink.jsx";
 import '../../style/PostList.css';
 import api from "../../api/axiosInstance.jsx"
+import potatoLogo from "../../assets/comu-car.jpeg";
 
 const PAGE_SIZE = 10;
 
@@ -83,7 +83,12 @@ const PostList = () => {
     return (
         <div className="potato-post-list-container">
             <div className="text-center mb-4">
-                <LogoLink width="120"/>
+                <img
+                    src={potatoLogo}
+                    alt="감자 로고"
+                    className="potato-logo"
+                    width={150}
+                />
                 <h1 className="potato-title">감자나라 커뮤니티</h1>
                 {isLoggedIn && (
                     <button

@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useParams} from 'react-router-dom';
-import LogoLink from "../../components/LogoLink.jsx";
 import api from "../../api/axiosInstance.jsx"
 
 const PostDetail = () => {
@@ -26,9 +25,8 @@ const PostDetail = () => {
     if (!post) return <div>게시글이 존재하지 않습니다.</div>;
 
     return (
-        <div className="potato-post-detail-container">
+        <div className="potato-post-create-container">
             <div className="text-center mb-4">
-                <LogoLink width="120"/>
                 <h2 className="potato-title">{post.title}</h2>
             </div>
             <div className="mb-3">
