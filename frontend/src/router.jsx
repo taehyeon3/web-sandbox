@@ -7,6 +7,8 @@ import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import Join from "./pages/Join.jsx";
 import Header from "./components/Header.jsx";
+import PostList from "./pages/PostList.jsx";
+import PostDetail from "./pages/PostDetail.jsx";
 
 const Router = () => {
     return (
@@ -17,6 +19,8 @@ const Router = () => {
                     <Route path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/join" element={<Join/>}/>
+                    <Route path="/posts" element={<PostList/>}/>
+                    <Route path="/posts/:id" element={<PostDetail/>}/>
                     <Route path="*" element={<Navigate to="/" replace/>}/>
                 </Routes>
             </div>

@@ -144,3 +144,25 @@ body {
     flex-direction: column;
     min-height: 100vh;
 }
+
+.potato-feature-card {
+    transition: box-shadow 0.2s, transform 0.1s, border-color 0.2s;
+    border: 2px solid #a67c52;
+    box-shadow: 0 2px 8px rgba(166, 124, 82, 0.05);
+    background: #fffbe7;
+}
+
+.potato-feature-card:hover,
+.potato-feature-card:focus,
+.potato-feature-card:active {
+    border-color: #5d4037;
+    box-shadow: 0 4px 16px rgba(166, 124, 82, 0.18);
+    transform: translateY(-2px) scale(1.03);
+    background: #f3d77d;
+    outline: none;
+}
+
+.potato-feature-card:active {
+    transform: scale(0.98);
+    background: #f8e9b7;
+}

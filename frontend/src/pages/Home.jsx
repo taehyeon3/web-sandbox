@@ -1,10 +1,11 @@
 import React from 'react';
 import {Button, Card, Col, Container, Row} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import LogoLink from "../components/LogoLink.jsx";
 
 const Home = () => {
     const isLoggedIn = localStorage.getItem('user') !== null;
+    const navigate = useNavigate();
     return (
         <Container className="py-5">
             <Row className="justify-content-center">
@@ -31,7 +32,7 @@ const Home = () => {
                             <Card className="mb-4 potato-feature-card">
                                 <Card.Body>
                                     <h3>🍟 광고 문의</h3>
-                                    <p>맛있는 감자 광고를 올려주세요!</p>
+                                    <p>광고를 올려주세요!</p>
                                 </Card.Body>
                             </Card>
                         </Col>
@@ -39,15 +40,19 @@ const Home = () => {
                             <Card className="mb-4 potato-feature-card">
                                 <Card.Body>
                                     <h3>🌱 광고 문의</h3>
-                                    <p>맛있는 감자 광고를 올려주세요!!</p>
+                                    <p>광고를 올려주세요!!</p>
                                 </Card.Body>
                             </Card>
                         </Col>
                         <Col md={4}>
-                            <Card className="mb-4 potato-feature-card">
+                            <Card
+                                className="mb-4 potato-feature-card"
+                                style={{cursor: 'pointer'}}
+                                onClick={() => navigate('/posts')}
+                            >
                                 <Card.Body>
-                                    <h3>👨‍🌾 감자 커뮤니티</h3>
-                                    <p>감자를 사랑하는 사람들과 소통해보세요!</p>
+                                    <h3>👨‍🌾 커뮤니티</h3>
+                                    <p>사람들과 소통해보세요!</p>
                                 </Card.Body>
                             </Card>
                         </Col>
