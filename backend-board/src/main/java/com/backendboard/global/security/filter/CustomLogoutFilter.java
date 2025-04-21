@@ -47,7 +47,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
-		
+
 		if (refreshToken == null || !jwtUtil.getType(refreshToken).equals("refresh")) {
 			log.info("CustomLogoutFilter : refresh 토큰폼이 아님");
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
