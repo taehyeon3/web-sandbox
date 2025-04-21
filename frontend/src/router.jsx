@@ -10,6 +10,7 @@ import Header from "./components/Header.jsx";
 import PostList from "./pages/post/PostList.jsx";
 import PostDetail from "./pages/post/PostDetail.jsx";
 import PostCreate from "./pages/post/PostCreate.jsx";
+import PostEdit from "./pages/post/PostEdit.jsx";
 
 const Router = () => {
     return (
@@ -23,6 +24,7 @@ const Router = () => {
                     <Route path="/posts" element={<PostList/>}/>
                     <Route path="/posts/:id" element={<PostDetail/>}/>
                     <Route path="/posts/create" element={<PostCreate/>}/>
+                    <Route path="/posts/edit/:id" element={<PostEdit/>}/>
                     <Route path="*" element={<Navigate to="/" replace/>}/>
                 </Routes>
             </div>
