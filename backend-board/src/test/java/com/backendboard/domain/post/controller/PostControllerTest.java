@@ -3,6 +3,8 @@ package com.backendboard.domain.post.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -66,7 +68,11 @@ class PostControllerTest {
 		@DisplayName("성공 201")
 		void success() throws Exception {
 			// given
-			PostCreateRequest request = PostCreateRequest.builder().title("제목").content("내용").build();
+			PostCreateRequest request = PostCreateRequest.builder()
+				.title("제목")
+				.content("내용")
+				.imageIds(new ArrayList<>())
+				.build();
 			Post post = postMockData.createPost(user);
 
 			// when & then
@@ -89,7 +95,11 @@ class PostControllerTest {
 		@DisplayName("성공 200")
 		void success() throws Exception {
 			// given
-			PostUpdateRequest request = PostUpdateRequest.builder().title("제목 변경").content("내용 변경").build();
+			PostUpdateRequest request = PostUpdateRequest.builder()
+				.title("제목 변경")
+				.content("내용 변경")
+				.imageIds(new ArrayList<>())
+				.build();
 			Post post = postMockData.createPost(user);
 
 			// when & then
@@ -107,7 +117,11 @@ class PostControllerTest {
 		@DisplayName("게시글을 찾을 수 없습니다. 404")
 		void notFoundPost() throws Exception {
 			// given
-			PostUpdateRequest request = PostUpdateRequest.builder().title("제목 변경").content("내용 변경").build();
+			PostUpdateRequest request = PostUpdateRequest.builder()
+				.title("제목 변경")
+				.content("내용 변경")
+				.imageIds(new ArrayList<>())
+				.build();
 			Post post = postMockData.createPost(user);
 
 			// when & then

@@ -1,5 +1,7 @@
 package com.backendboard.domain.post.dto;
 
+import java.util.List;
+
 import com.backendboard.domain.post.entity.Post;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,20 +23,25 @@ public class PostUpdateResponse {
 	@Schema(description = "게시글 내용", example = "내용입니다.")
 	private final String content;
 
+	@Schema(description = "이미지 아이디", example = "[1, 2, 3]")
+	private final List<Long> imageIds;
+
 	@Builder
-	private PostUpdateResponse(Long id, String author, String title, String content) {
+	private PostUpdateResponse(Long id, String author, String title, String content, List<Long> imageIds) {
 		this.id = id;
 		this.author = author;
 		this.title = title;
 		this.content = content;
+		this.imageIds = imageIds;
 	}
 
-	public static PostUpdateResponse toDto(Post post, String author) {
+	public static PostUpdateResponse toDto(Post post, String author, List<Long> imageIds) {
 		return PostUpdateResponse.builder()
 			.id(post.getId())
 			.author(author)
 			.title(post.getTitle())
 			.content(post.getContent())
+			.imageIds(imageIds)
 			.build();
 	}
 }
