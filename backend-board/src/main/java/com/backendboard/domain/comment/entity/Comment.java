@@ -30,14 +30,14 @@ public class Comment extends BaseEntity {
 	private String content;
 
 	@Column(nullable = false)
-	private boolean isDeleted;
+	private boolean deleted;
 
 	@Builder
 	private Comment(Long postId, Long userId, String content) {
 		this.postId = postId;
 		this.userId = userId;
 		this.content = content;
-		this.isDeleted = false;
+		this.deleted = false;
 	}
 
 	public static Comment createComment(Long postId, Long userId, String content) {
@@ -53,6 +53,6 @@ public class Comment extends BaseEntity {
 	}
 
 	public void delete() {
-		this.isDeleted = true;
+		this.deleted = true;
 	}
 }

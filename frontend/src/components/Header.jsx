@@ -10,9 +10,13 @@ const Header = () => {
     // 로컬 스토리지에서 로그인 상태 확인
     const isLoggedIn = localStorage.getItem('user') !== null;
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await fetch('/api/logout', {
+            method: 'POST',
+        });
         // 로컬 스토리지에서 사용자 정보 삭제
         localStorage.removeItem('user');
+        localStorage.removeItem('accessToken');
         // 홈페이지로 이동
         navigate('/');
         // 페이지 새로고침 (선택사항)

@@ -18,7 +18,7 @@ public class CommentCreateRequest {
 
 	@Schema(description = "댓글 내용", example = "안녕하세요.")
 	@NotBlank
-	@Size(max = 500)
+	@Size(max = 1000)
 	private final String content;
 
 	@Builder

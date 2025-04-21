@@ -2,6 +2,7 @@ package com.backendboard.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,7 +38,8 @@ public class SecurityConfig {
 			.csrf(AbstractHttpConfigurer::disable)
 			.formLogin(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests((auth) -> auth
-				.requestMatchers("/login", "/join", "reissue", "/swagger-ui/**", "/swagger-resources/**",
+				.requestMatchers(HttpMethod.GET, "/**").permitAll()
+				.requestMatchers("/login", "/join", "/reissue", "/swagger-ui/**", "/swagger-resources/**",
 					"/v3/api-docs/**")
 				.permitAll()
 				.anyRequest()

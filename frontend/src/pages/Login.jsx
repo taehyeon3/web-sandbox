@@ -33,6 +33,7 @@ const Login = () => {
             if (response.ok) {
                 console.log('로그인 성공:');
                 localStorage.setItem('user', JSON.stringify({email, name: '감자 사용자'}));
+                localStorage.setItem('accessToken', response.headers.get('Authorization'));
                 navigate('/');
             } else {
                 console.error('로그인 실패');

@@ -33,21 +33,22 @@ public class JwtFilter extends OncePerRequestFilter {
 		String authorization = request.getHeader(AUTHORIZATION);
 
 		if (jwtUtil.isNotBearerToken(authorization)) {
-			log.debug("JwtFilter : 잘못된 토큰");
+			log.info("JwtFilter : 잘못된 토큰");
 			filterChain.doFilter(request, response);
 			return;
 		}
 
 		String token = jwtUtil.getToken(authorization);
 
-		if (!jwtUtil.getType(token).equals("access")) {
-			log.debug("JwtFilter : access 토큰이 아님");
-			filterChain.doFilter(request, response);
+		if (jwtUtil.isExpired(token)) {
+			log.info("JwtFilter : 토큰 만료");
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			return;
 		}
-		if (jwtUtil.isExpired(token)) {
-			log.debug("JwtFilter : 토큰 만료");
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+		if (!jwtUtil.getType(token).equals("access")) {
+			log.info("JwtFilter : access 토큰이 아님");
+			filterChain.doFilter(request, response);
 			return;
 		}
 

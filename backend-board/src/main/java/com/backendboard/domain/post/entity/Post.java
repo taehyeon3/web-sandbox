@@ -22,7 +22,7 @@ public class Post {
 	@Column(nullable = false)
 	private Long userId;
 
-	@Column(nullable = false, columnDefinition = "VARCHAR(100)")
+	@Column(nullable = false, columnDefinition = "VARCHAR(200)")
 	private String title;
 
 	@Lob
@@ -36,14 +36,14 @@ public class Post {
 	private Long viewCount;
 
 	@Column(nullable = false)
-	private boolean isDeleted;
+	private boolean deleted;
 
 	@Builder
 	private Post(Long userId, String title, String content) {
 		this.userId = userId;
 		this.title = title;
 		this.content = content;
-		this.isDeleted = false;
+		this.deleted = false;
 		this.likeCount = 0L;
 		this.viewCount = 0L;
 	}
@@ -54,6 +54,6 @@ public class Post {
 	}
 
 	public void delete() {
-		this.isDeleted = true;
+		this.deleted = true;
 	}
 }

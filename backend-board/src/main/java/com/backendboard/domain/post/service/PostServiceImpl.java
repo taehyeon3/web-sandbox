@@ -18,7 +18,6 @@ import com.backendboard.domain.post.dto.PostUpdateRequest;
 import com.backendboard.domain.post.dto.PostUpdateResponse;
 import com.backendboard.domain.post.entity.Post;
 import com.backendboard.domain.post.respository.PostRepository;
-import com.backendboard.domain.postimage.repository.PostImageRepository;
 import com.backendboard.domain.user.entity.User;
 import com.backendboard.domain.user.repository.UserRepository;
 import com.backendboard.global.error.CustomError;
@@ -31,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 	private final PostRepository postRepository;
-	private final PostImageRepository postImageRepository;
 	private final UserRepository userRepository;
 
 	@Transactional
@@ -76,7 +74,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public Slice<PostSliceResponse> getPostsSlice(Pageable pageable) {
-		Slice<Post> posts = postRepository.findBy(pageable);
+		Slice<Post> posts = postRepository.findByDeleted(false, pageable);
 
 		Set<Long> userIds = posts.stream().map(Post::getUserId).collect(Collectors.toSet());
 

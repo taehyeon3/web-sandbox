@@ -1,0 +1,133 @@
+/* src/style/PotatoPostCreate.css */
+
+.potato-post-create-container {
+    max-width: 700px;
+    margin: 40px auto;
+    border-radius: 18px;
+    padding: 32px 24px 24px 24px;
+    box-shadow: 0 4px 16px rgba(166, 124, 82, 0.12);
+}
+
+.potato-title {
+    color: #a67c52;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.potato-label {
+    font-weight: bold;
+    color: #5d4037;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.potato-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1rem;
+    border: 1.5px solid #d4b996;
+    border-radius: 8px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    background: #fffbe7;
+}
+
+.potato-quill-editor {
+    background: #fffbe7;
+    border-radius: 8px;
+}
+
+.ql-container {
+    min-height: 250px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+}
+
+.ql-editor {
+    min-height: 200px;
+}
+
+.potato-btn:hover {
+    background: #5d4037;
+    color: #fff;
+}
+
+.ql-editor img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 8px 0;
+}
+
+/* PostCreate.css에 추가 */
+.potato-error {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ef9a9a;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.potato-cancel-btn {
+    background: #e0e0e0;
+    color: #5d4037;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-weight: bold;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.potato-cancel-btn:hover {
+    background: #bdbdbd;
+}
+
+.potato-btn:disabled,
+.potato-cancel-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* PostCreate.css에 추가 */
+.quill-container {
+    position: relative;
+}
+
+.quill-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: #a67c52;
+    z-index: 10;
+}
+
+.potato-quill-editor {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.potato-quill-editor .ql-editor {
+    min-height: 250px;
+    font-size: 16px;
+}
