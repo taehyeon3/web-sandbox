@@ -46,10 +46,10 @@ class WebConfigTest {
 		File testImage = new File(directory, TEST_IMAGE_NAME);
 		if (!testImage.exists()) {
 			BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-			Graphics2D g = image.createGraphics();
-			g.setColor(Color.RED);
-			g.fillRect(0, 0, 100, 100);
-			g.dispose();
+			Graphics2D graphics = image.createGraphics();
+			graphics.setColor(Color.RED);
+			graphics.fillRect(0, 0, 100, 100);
+			graphics.dispose();
 			ImageIO.write(image, "jpg", testImage);
 		}
 	}
