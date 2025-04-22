@@ -131,3 +131,21 @@
     min-height: 250px;
     font-size: 16px;
 }
+
+.ql-align-center {
+    text-align: center;
+}
+
+.ql-align-right {
+    text-align: right;
+}
+
+.ql-align-justify {
+    text-align: justify;
+}
+
+/* 이미지 스타일 */
+.ql-editor img {
+    max-width: 100%;
+    height: auto;
+}

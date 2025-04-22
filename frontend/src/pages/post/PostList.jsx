@@ -24,7 +24,7 @@ const PostList = () => {
     });
 
     useEffect(() => {
-        api.get(`/posts?page=${page}&size=${PAGE_SIZE}`)
+        api.get(`/posts?page=${page}&size=${PAGE_SIZE}&sort=lastModifiedDate,desc`)
             .then(res => {
                 if (res.status !== 200)
                     throw new Error('게시글을 불러올 수 없습니다.');
@@ -110,8 +110,11 @@ const PostList = () => {
                     <li key={post.id} className="list-group-item">
                         <Link to={`/posts/${post.id}`} className="potato-link">
                             <h4>{post.title}</h4>
-                            <div className="text-muted small mb-1">
+                            <div className="text-muted small mb-1" style={{display: 'flex'}}>
                                 작성자: {post.author} | 좋아요: {post.likeCount} | 조회수: {post.viewCount}
+                                <span
+                                    style={{marginLeft: 'auto'}}> {new Date(post.lastModifiedDate).toLocaleString()}
+                                </span>
                             </div>
                         </Link>
                     </li>
