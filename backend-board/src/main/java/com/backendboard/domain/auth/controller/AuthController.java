@@ -1,20 +1,22 @@
 package com.backendboard.domain.auth.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backendboard.domain.auth.dto.JoinRequest;
 import com.backendboard.domain.auth.dto.JoinResponse;
+import com.backendboard.domain.auth.dto.PasswordUpdateRequest;
 import com.backendboard.domain.auth.dto.RefreshTokenDto;
 import com.backendboard.domain.auth.service.AuthService;
 import com.backendboard.global.error.CustomError;
 import com.backendboard.global.error.CustomException;
 import com.backendboard.global.error.dto.ErrorResponse;
+import com.backendboard.global.security.dto.CustomUserDetails;
 import com.backendboard.global.util.JwtUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +35,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
-	private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 	private final AuthService authService;
 	private final JwtUtil jwtUtil;
 
@@ -54,6 +55,23 @@ public class AuthController {
 	public ResponseEntity<JoinResponse> join(@RequestBody @Valid JoinRequest request) {
 		JoinResponse response = authService.joinProcess(request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	}
+
+	@Operation(
+		summary = "비밀번호 변경 API",
+		description = "비밀번호를 변경합니다.",
+		security = {@SecurityRequirement(name = "bearerAuth")}
+	)
+	@ApiResponses({
+		@ApiResponse(responseCode = "204", description = "204 성공", content = @Content()),
+		@ApiResponse(responseCode = "403", description = "본인이 아닙니다.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+	})
+	@PatchMapping("/users/password")
+	public ResponseEntity<Void> updatePassword(PasswordUpdateRequest request,
+		@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+		authService.updatePassword(request, customUserDetails.getId());
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@Operation(

@@ -2,6 +2,7 @@ package com.backendboard.domain.auth.service;
 
 import com.backendboard.domain.auth.dto.JoinRequest;
 import com.backendboard.domain.auth.dto.JoinResponse;
+import com.backendboard.domain.auth.dto.PasswordUpdateRequest;
 import com.backendboard.domain.auth.dto.RefreshTokenDto;
 
 public interface AuthService {
@@ -12,4 +13,6 @@ public interface AuthService {
 	void deleteRefreshToken(String refreshToken);
 
 	boolean isValidRefreshToken(String refreshToken);
+
+	void updatePassword(PasswordUpdateRequest request, Long authUserId);
 }

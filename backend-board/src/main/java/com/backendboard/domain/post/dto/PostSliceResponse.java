@@ -1,5 +1,7 @@
 package com.backendboard.domain.post.dto;
 
+import java.time.LocalDateTime;
+
 import com.backendboard.domain.post.entity.Post;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,14 +29,23 @@ public class PostSliceResponse {
 	@Schema(description = "조회수", example = "0")
 	private final Long viewCount;
 
+	@Schema(description = "생성 시간")
+	private final LocalDateTime createdDate;
+
+	@Schema(description = "최근 수정 시간")
+	private final LocalDateTime lastModifiedDate;
+
 	@Builder
-	private PostSliceResponse(Long id, String author, String title, String content, Long likeCount, Long viewCount) {
+	private PostSliceResponse(Long id, String author, String title, String content, Long likeCount, Long viewCount,
+		LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
 		this.id = id;
 		this.author = author;
 		this.title = title;
 		this.content = content;
 		this.likeCount = likeCount;
 		this.viewCount = viewCount;
+		this.createdDate = createdDate;
+		this.lastModifiedDate = lastModifiedDate;
 	}
 
 	@Builder
@@ -46,6 +57,8 @@ public class PostSliceResponse {
 			.content(post.getContent())
 			.likeCount(post.getLikeCount())
 			.viewCount(post.getViewCount())
+			.createdDate(post.getCreatedDate())
+			.lastModifiedDate(post.getLastModifiedDate())
 			.build();
 	}
 }

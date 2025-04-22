@@ -1,5 +1,6 @@
 package com.backendboard.domain.post.service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -18,6 +19,8 @@ import com.backendboard.domain.post.dto.PostUpdateRequest;
 import com.backendboard.domain.post.dto.PostUpdateResponse;
 import com.backendboard.domain.post.entity.Post;
 import com.backendboard.domain.post.respository.PostRepository;
+import com.backendboard.domain.postimage.entity.PostImage;
+import com.backendboard.domain.postimage.repository.PostImageRepository;
 import com.backendboard.domain.user.entity.User;
 import com.backendboard.domain.user.repository.UserRepository;
 import com.backendboard.global.error.CustomError;
@@ -31,14 +34,23 @@ import lombok.RequiredArgsConstructor;
 public class PostServiceImpl implements PostService {
 	private final PostRepository postRepository;
 	private final UserRepository userRepository;
+	private final PostImageRepository postImageRepository;
 
 	@Transactional
 	@Override
 	public PostCreateResponse createPost(PostCreateRequest request, Long authUserId) {
 		User user = userRepository.getByAuthUserId(authUserId);
 		Post post = PostCreateRequest.toEntity(request, user.getId());
+
 		postRepository.save(post);
-		return PostCreateResponse.toDto(post, user.getNickname());
+
+		List<Long> imageIds = request.getImageIds();
+		List<PostImage> images = postImageRepository.findAllById(imageIds);
+
+		for (PostImage image : images) {
+			image.updatePostId(post.getId());
+		}
+		return PostCreateResponse.toDto(post, user.getNickname(), imageIds);
 	}
 
 	@Transactional
@@ -50,7 +62,14 @@ public class PostServiceImpl implements PostService {
 		validateAuthor(post, user);
 
 		post.update(request.getTitle(), request.getContent());
-		return PostUpdateResponse.toDto(post, user.getNickname());
+
+		List<Long> imageIds = request.getImageIds();
+		List<PostImage> images = postImageRepository.findAllById(imageIds);
+
+		for (PostImage image : images) {
+			image.updatePostId(post.getId());
+		}
+		return PostUpdateResponse.toDto(post, user.getNickname(), imageIds);
 	}
 
 	@Override
@@ -58,7 +77,9 @@ public class PostServiceImpl implements PostService {
 		Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(CustomError.POST_NOT_FOUND));
 		User user = userRepository.findById(post.getUserId())
 			.orElseThrow(() -> new CustomException(CustomError.USER_NOT_FOUND));
-		return PostReadResponse.toDto(post, user.getNickname());
+
+		List<PostImage> images = postImageRepository.findByPostId(postId);
+		return PostReadResponse.toDto(post, user.getNickname(), images);
 	}
 
 	@Transactional

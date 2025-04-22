@@ -60,6 +60,10 @@ public class AuthUser extends BaseEntity {
 			.build();
 	}
 
+	public void updatePassword(String password) {
+		this.password = password;
+	}
+
 	public void deactivate() {
 		this.status = false;
 	}

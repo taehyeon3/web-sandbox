@@ -88,7 +88,7 @@ public class CommentController {
 	@Operation(
 		summary = "댓글 보기 API",
 		description = "댓글을 보여줍니다.",
-		security = {@SecurityRequirement(name = "bearerAuth")}
+		security = {}
 	)
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",
@@ -123,7 +123,7 @@ public class CommentController {
 	@Operation(
 		summary = "댓글 슬라이스 보기 API",
 		description = "댓글을 슬라이스로 보여줍니다.",
-		security = {@SecurityRequirement(name = "bearerAuth")}
+		security = {}
 	)
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",

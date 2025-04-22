@@ -1,9 +1,12 @@
 package com.backendboard.domain.post.dto;
 
+import java.util.List;
+
 import com.backendboard.domain.post.entity.Post;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,10 +24,15 @@ public class PostCreateRequest {
 	@NotBlank
 	private final String content;
 
+	@Schema(description = "이미지 아이디", example = "[1, 2, 3]")
+	@NotNull
+	private final List<Long> imageIds;
+
 	@Builder
-	private PostCreateRequest(String title, String content) {
+	private PostCreateRequest(String title, String content, List<Long> imageIds) {
 		this.title = title;
 		this.content = content;
+		this.imageIds = imageIds;
 	}
 
 	public static Post toEntity(PostCreateRequest dto, Long userId) {

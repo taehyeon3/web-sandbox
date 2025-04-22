@@ -40,4 +40,8 @@ public class User extends BaseEntity {
 		this.nickname = nickname;
 		this.authUser = authUser;
 	}
+
+	public void updateNickname(String nickname) {
+		this.nickname = nickname;
+	}
 }

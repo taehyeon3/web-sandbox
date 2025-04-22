@@ -53,4 +53,8 @@ public class PostImage extends BaseEntity {
 		this.imageType = imageType;
 		this.fileSize = fileSize;
 	}
+
+	public void updatePostId(Long postId) {
+		this.postId = postId;
+	}
 }
