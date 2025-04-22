@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.backendboard.domain.auth.dto.JoinRequest;
 import com.backendboard.domain.auth.dto.JoinResponse;
+import com.backendboard.domain.auth.dto.PasswordUpdateRequest;
 import com.backendboard.domain.auth.dto.RefreshTokenDto;
 import com.backendboard.domain.auth.entity.AuthUser;
 import com.backendboard.domain.auth.entity.RefreshToken;
@@ -56,6 +57,13 @@ public class AuthServiceImpl implements AuthService {
 		authUserRepository.save(authUser);
 		userRepository.save(user);
 		return JoinResponse.toDto(user);
+	}
+
+	@Transactional
+	@Override
+	public void updatePassword(PasswordUpdateRequest request, Long authUserId) {
+		AuthUser user = authUserRepository.getReferenceById(authUserId);
+		user.updatePassword(bCryptPasswordEncoder.encode(request.getPassword()));
 	}
 
 	public void validateDuplicationNickname(String nickname) {

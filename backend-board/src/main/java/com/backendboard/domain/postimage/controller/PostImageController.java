@@ -62,7 +62,7 @@ public class PostImageController {
 	@Operation(
 		summary = "이미지 보기 API",
 		description = "이미지를 보여줍니다.",
-		security = {@SecurityRequirement(name = "bearerAuth")}
+		security = {}
 	)
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",

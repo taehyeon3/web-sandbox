@@ -68,7 +68,7 @@ public class PostLikeController {
 	@Operation(
 		summary = "게시판 좋아요 수 API",
 		description = "게시판 좋아요 수를 보는 기능입니다.",
-		security = {@SecurityRequirement(name = "bearerAuth")}
+		security = {}
 	)
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",

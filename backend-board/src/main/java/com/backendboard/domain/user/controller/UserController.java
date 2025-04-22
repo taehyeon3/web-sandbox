@@ -35,7 +35,7 @@ public class UserController {
 	@Operation(
 		summary = "유저 보기 API",
 		description = "유저의 정보를 보여줍니다.",
-		security = {@SecurityRequirement(name = "bearerAuth")}
+		security = {}
 	)
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",
@@ -64,7 +64,7 @@ public class UserController {
 		@ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
-	@PatchMapping("/{userId}")
+	@PatchMapping("/{userId}/nickname")
 	public ResponseEntity<UserNicknameUpdateResponse> updateNickname(@PathVariable Long userId,
 		@AuthenticationPrincipal CustomUserDetails customUserDetails, UserNicknameUpdateRequest request) {
 		UserNicknameUpdateResponse response = userService.updateNickname(request, userId, customUserDetails.getId());

@@ -88,7 +88,7 @@ public class PostController {
 	@Operation(
 		summary = "게시글 보기 API",
 		description = "게시글을 보여줍니다.",
-		security = {@SecurityRequirement(name = "bearerAuth")}
+		security = {}
 	)
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",
@@ -123,7 +123,7 @@ public class PostController {
 	@Operation(
 		summary = "게시글 슬라이스 API",
 		description = "게시글을 슬라이스로 보여줍니다.",
-		security = {@SecurityRequirement(name = "bearerAuth")}
+		security = {}
 	)
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",
