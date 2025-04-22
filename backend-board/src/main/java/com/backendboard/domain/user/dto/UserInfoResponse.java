@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Schema(description = "유저 보기 응답 DTO")
 @Getter
-public class UserReadResponse {
+public class UserInfoResponse {
 	@Schema(description = "회원 고유 번호", example = "1")
 	private final Long id;
 
@@ -22,14 +22,14 @@ public class UserReadResponse {
 	private final String nickname;
 
 	@Builder
-	private UserReadResponse(Long id, String loginId, String username, String nickname) {
+	private UserInfoResponse(Long id, String loginId, String username, String nickname) {
 		this.id = id;
 		this.loginId = loginId;
 		this.username = username;
 		this.nickname = nickname;
 	}
 
-	public static UserReadResponse toDto(User user) {
+	public static UserInfoResponse toDto(User user) {
 		return builder()
 			.id(user.getId())
 			.loginId(user.getAuthUser().getUsername())
