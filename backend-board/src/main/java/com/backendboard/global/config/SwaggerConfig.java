@@ -45,10 +45,18 @@ public class SwaggerConfig {
 	}
 
 	@Bean
+	public GroupedOpenApi user() {
+		return GroupedOpenApi.builder()
+			.group("유저 관련 API")
+			.pathsToMatch("/users/**")
+			.build();
+	}
+
+	@Bean
 	public GroupedOpenApi auth() {
 		return GroupedOpenApi.builder()
 			.group("인증 관련 API")
-			.pathsToMatch("/join", "reissue")
+			.pathsToMatch("/join", "/reissue")
 			.build();
 	}
 
