@@ -1,5 +1,7 @@
 package com.backendboard.domain.comment.dto;
 
+import java.time.LocalDateTime;
+
 import com.backendboard.domain.comment.entity.Comment;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,12 +23,22 @@ public class CommentReadResponse {
 	@Schema(description = "댓글 내용", example = "안녕하세요.")
 	private final String content;
 
+	@Schema(description = "생성 시간")
+	private final LocalDateTime createdDate;
+
+	@Schema(description = "최근 수정 시간")
+	private final LocalDateTime lastModifiedDate;
+
 	@Builder
-	private CommentReadResponse(Long id, Long postId, String author, String content) {
+	private CommentReadResponse(Long id, Long postId, String author, String content, LocalDateTime createdDate,
+		LocalDateTime lastModifiedDate
+	) {
 		this.id = id;
 		this.postId = postId;
 		this.author = author;
 		this.content = content;
+		this.createdDate = createdDate;
+		this.lastModifiedDate = lastModifiedDate;
 	}
 
 	public static CommentReadResponse toDto(Comment comment, String author) {
@@ -34,6 +46,8 @@ public class CommentReadResponse {
 			.id(comment.getId())
 			.postId(comment.getPostId())
 			.content(comment.getContent())
+			.createdDate(comment.getCreatedDate())
+			.lastModifiedDate(comment.getLastModifiedDate())
 			.author(author)
 			.build();
 	}

@@ -1,5 +1,6 @@
 package com.backendboard.domain.post.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.backendboard.domain.post.entity.Post;
@@ -34,9 +35,15 @@ public class PostReadResponse {
 	@Schema(description = "이미지 아이디", example = "[1, 2, 3]")
 	private final List<PostImageReadResponse> images;
 
+	@Schema(description = "생성 시간")
+	private final LocalDateTime createdDate;
+
+	@Schema(description = "최근 수정 시간")
+	private final LocalDateTime lastModifiedDate;
+
 	@Builder
 	private PostReadResponse(Long id, String author, String title, String content, Long likeCount, Long viewCount,
-		List<PostImageReadResponse> images) {
+		List<PostImageReadResponse> images, LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
 		this.id = id;
 		this.author = author;
 		this.title = title;
@@ -44,6 +51,8 @@ public class PostReadResponse {
 		this.likeCount = likeCount;
 		this.viewCount = viewCount;
 		this.images = images;
+		this.createdDate = createdDate;
+		this.lastModifiedDate = lastModifiedDate;
 	}
 
 	@Builder
@@ -57,6 +66,8 @@ public class PostReadResponse {
 			.likeCount(post.getLikeCount())
 			.viewCount(post.getViewCount())
 			.images(images.stream().map(PostImageReadResponse::toDto).toList())
+			.createdDate(post.getCreatedDate())
+			.lastModifiedDate(post.getLastModifiedDate())
 			.build();
 	}
 }
