@@ -5,6 +5,7 @@ import '../../style/PostDetil.css'
 
 const PostDetail = () => {
     const {id} = useParams();
+    const [nickname, setNickname] = useState('');
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -21,10 +22,15 @@ const PostDetail = () => {
     const [hasMore, setHasMore] = useState(true);
     const [editingComment, setEditingComment] = useState(null);
     const [editCommentText, setEditCommentText] = useState('');
+
     const commentsPerPage = 5;
+
 
     useEffect(() => {
         const user = localStorage.getItem('user');
+        if (user) {
+            setNickname(JSON.parse(user).nickname);
+        }
         const accessToken = localStorage.getItem('accessToken');
         setIsLoggedIn(!!user && !!accessToken);
     }, []);
@@ -38,10 +44,21 @@ const PostDetail = () => {
             })
             .then(data => {
                 setPost(data);
-                setLikeCount(data.likeCount || 0);
+                api.get(`/post-likes/${id}/count`).then(res => {
+                    if (res.status !== 200) {
+                        throw new Error('좋아요 상태를 불러올 수 없습니다.');
+                    }
+                    setLikeCount(res.data.count);
+                })
 
                 // 로그인한 경우 좋아요 상태 확인
                 if (isLoggedIn) {
+                    api.get(`/post-likes/${id}/status`).then(res => {
+                        if (res.status !== 200) {
+                            throw new Error('좋아요 상태를 불러올 수 없습니다.');
+                        }
+                        setIsLiked(res.data.liked);
+                    })
                     // 좋아요 상태 확인 로직 추가
                 }
             })
@@ -52,7 +69,7 @@ const PostDetail = () => {
     // 댓글 불러오기
     const fetchComments = (page = 0) => {
         setCommentLoading(true);
-        api.get(`/comments/posts/${id}?page=${page}&size=${commentsPerPage}`)
+        api.get(`/comments/posts/${id}?page=${page}&size=${commentsPerPage}&sort=lastModifiedDate,desc`)
             .then(res => {
                 // 응답 데이터 구조 확인
                 const responseData = res.data;
@@ -65,7 +82,7 @@ const PostDetail = () => {
                 }
 
                 // 더 불러올 댓글이 있는지 확인 (페이지네이션 정보 활용)
-                setHasMore(!res.data.empty);
+                setHasMore(!res.data.last);
             })
             .catch(err => {
                 console.error('댓글을 불러오는데 실패했습니다:', err);
@@ -84,7 +101,7 @@ const PostDetail = () => {
 
     // 작성자와 현재 사용자가 일치하는지 확인하는 함수
     const isPostAuthor = () => {
-        return true;
+        return post.author === nickname;
     };
 
     // 수정 페이지로 이동하는 핸들러
@@ -209,8 +226,7 @@ const PostDetail = () => {
 
     // 댓글 작성자인지 확인
     const isCommentAuthor = (comment) => {
-        // 실제 구현에서는 현재 로그인한 사용자와 댓글 작성자를 비교해야 함
-        return true; // 테스트를 위해 항상 true 반환
+        return comment.author === nickname;
     };
 
     if (loading) return <div>로딩 중...</div>;
@@ -223,12 +239,14 @@ const PostDetail = () => {
                 <h2 className="potato-title">{post.title}</h2>
             </div>
             <div className="mb-3">
-                <div className="text-muted small mb-2">
-                    작성자: {post.author} | 좋아요: {post.likeCount} | 조회수: {post.viewCount}
+                <div className="text-muted small mb-2" style={{display: 'flex'}}>
+                    작성자: {post.author} | 좋아요: {post.likeCount} |
+                    조회수: {post.viewCount}
+                    <span style={{marginLeft: 'auto'}}> {new Date(post.lastModifiedDate).toLocaleString()}</span>
                 </div>
                 {/* content가 HTML일 경우 안전하게 렌더링 */}
                 <div
-                    className="potato-post-content"
+                    className="ql-editor"
                     dangerouslySetInnerHTML={{__html: post.content}}
                 />
             </div>
@@ -296,7 +314,7 @@ const PostDetail = () => {
                                     <div className="comment-header">
                                         <span className="comment-author">{comment.author}</span>
                                         <span className="comment-date">
-                                            {new Date(comment.createdAt).toLocaleString()}
+                                            {new Date(comment.lastModifiedDate).toLocaleString()}
                                         </span>
                                     </div>
 

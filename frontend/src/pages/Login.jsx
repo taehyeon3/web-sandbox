@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import {Alert, Button, Card, Col, Container, Form, Row} from 'react-bootstrap';
 import LogoLink from "../components/LogoLink.jsx";
 import {useNavigate} from "react-router-dom";
+import api from "../api/axiosInstance.jsx";
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -31,10 +32,22 @@ const Login = () => {
                 // 브라우저가 자동으로 multipart/form-data로 설정합니다.
             });
             if (response.ok) {
-                console.log('로그인 성공:');
-                localStorage.setItem('user', JSON.stringify({email, name: '감자 사용자'}));
                 localStorage.setItem('accessToken', response.headers.get('Authorization'));
-                navigate('/');
+                api.get('users').then(response => {
+                    if (response.status === 200) {
+                        console.log("성공적으로 데이터를 가져왔습니다.");
+                        localStorage.setItem('user', JSON.stringify({
+                            id: response.data.id,
+                            email,
+                            name: response.data.name,
+                            nickname: response.data.nickname
+                        }));
+                        console.log('로그인 성공:');
+                        navigate('/');
+                    } else {
+                        console.log(`오류 발생: ${response.status}`);
+                    }
+                });
             } else {
                 console.error('로그인 실패');
                 setShowError(true);

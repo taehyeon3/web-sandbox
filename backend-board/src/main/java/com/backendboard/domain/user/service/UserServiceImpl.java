@@ -3,9 +3,9 @@ package com.backendboard.domain.user.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.backendboard.domain.user.dto.UserInfoResponse;
 import com.backendboard.domain.user.dto.UserNicknameUpdateRequest;
 import com.backendboard.domain.user.dto.UserNicknameUpdateResponse;
-import com.backendboard.domain.user.dto.UserReadResponse;
 import com.backendboard.domain.user.entity.User;
 import com.backendboard.domain.user.repository.UserRepository;
 import com.backendboard.global.error.CustomError;
@@ -20,9 +20,9 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 
 	@Override
-	public UserReadResponse getUser(Long userId) {
-		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(CustomError.USER_NOT_FOUND));
-		return UserReadResponse.toDto(user);
+	public UserInfoResponse getInfo(Long authUserId) {
+		User user = userRepository.getByAuthUserId(authUserId);
+		return UserInfoResponse.toDto(user);
 	}
 
 	@Transactional

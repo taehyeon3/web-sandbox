@@ -1,10 +1,46 @@
 // PostForm.jsx - 공통 컴포넌트
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import ReactQuill from 'react-quill-new';
+import ReactQuill, {Quill} from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import '../../style/PostCreate.css';
 import api from '../../api/axiosInstance.jsx';
 import {useNavigate} from 'react-router-dom';
+import ImageResize from 'quill-image-resize-module-react';
+
+const BaseImage = Quill.import('formats/image');
+
+const ATTRIBUTES = ['alt', 'height', 'width', 'style', 'class'];
+
+class CustomImage extends BaseImage {
+    static formats(domNode) {
+        return ATTRIBUTES.reduce((formats, attribute) => {
+            if (domNode.hasAttribute(attribute)) {
+                formats[attribute] = domNode.getAttribute(attribute);
+            }
+            return formats;
+        }, {});
+    }
+
+    format(name, value) {
+        if (ATTRIBUTES.indexOf(name) > -1) {
+            if (value) {
+                this.domNode.setAttribute(name, value);
+            } else {
+                this.domNode.removeAttribute(name);
+            }
+        } else {
+            super.format(name, value);
+        }
+    }
+}
+
+Quill.register('formats/image', CustomImage, true);
+
+if (typeof window !== 'undefined') {
+    window.Quill = Quill;
+    Quill.register('modules/imageResize', ImageResize);
+}
+
 
 const PostForm = ({initialData = null, mode = 'create'}) => {
     const [title, setTitle] = useState(initialData?.title || '');
@@ -15,11 +51,49 @@ const PostForm = ({initialData = null, mode = 'create'}) => {
     const navigate = useNavigate();
     const [uploadedImages, setUploadedImages] = useState([]);
 
-    // 수정 모드일 경우 초기 이미지 추출
+    const addImagePrefix = (url) => {
+        if (url.startsWith('/images/') || url.startsWith('http')) {
+            return url;
+        }
+        if (url.startsWith('/')) {
+            return `/images${url}`;
+        }
+        return `/images/${url}`;
+    };
+
     useEffect(() => {
-        if (mode === 'edit' && initialData?.content) {
-            const imgs = extractImagesFromHTML(initialData.content);
-            setUploadedImages(imgs.filter(img => img.id));
+        if (mode === 'edit' && initialData?.id) {
+            // 게시글 관련 이미지 정보 불러오기
+            const fetchPostImages = async () => {
+                try {
+                    const response = await api.get(`/post-images/posts/${initialData.id}`);
+                    const imageData = response.data.content;
+
+                    const processedImageData = imageData.map(image => ({
+                        ...image,
+                        fileUrl: addImagePrefix(image.fileUrl)
+                    }));
+
+                    setUploadedImages(processedImageData);
+
+                    // 에디터 로드 후 이미지에 data-id 속성 추가
+                    setTimeout(() => {
+                        if (quillRef.current) {
+                            const editor = quillRef.current.getEditor();
+                            imageData.forEach(img => {
+                                if (img.fileUrl) {
+                                    const imgElements = editor.root.querySelectorAll(`img[src="${img.fileUrl}"]`);
+                                    imgElements.forEach(el => el.setAttribute('data-id', img.id));
+                                }
+                            });
+                        }
+                    }, 100);
+                } catch (err) {
+                    console.error('이미지 정보를 불러오는데 실패했습니다:', err);
+                }
+            };
+
+            fetchPostImages();
         }
     }, [initialData, mode]);
 
@@ -33,7 +107,7 @@ const PostForm = ({initialData = null, mode = 'create'}) => {
             const response = await api.post('/post-images', formData, {
                 headers: {'Content-Type': 'multipart/form-data'}
             });
-            const fileUrl = response.data.fileUrl;
+            const fileUrl = "/images/" + response.data.fileUrl;
             const imageId = response.data.id;
 
             // 에디터에 이미지 삽입
@@ -41,7 +115,7 @@ const PostForm = ({initialData = null, mode = 'create'}) => {
             const range = quill.getSelection() || {index: quill.getLength()};
             quill.insertEmbed(range.index, 'image', fileUrl);
 
-            setUploadedImages(prev => [...prev, {id: imageId, url: fileUrl}]);
+            setUploadedImages(prev => [...prev, {id: imageId, fileUrl: fileUrl}]);
             setTimeout(() => {
                 const editor = quillRef.current.getEditor();
                 const imgs = editor.root.querySelectorAll(`img[src="${fileUrl}"]`);
@@ -108,6 +182,7 @@ const PostForm = ({initialData = null, mode = 'create'}) => {
     const modules = useMemo(() => ({
         toolbar: {
             container: [
+                [{'align': [false, 'center', 'right', 'justify']}],
                 [{'header': [1, 2, 3, false]}],
                 ['bold', 'italic', 'underline', 'strike', 'blockquote'],
                 [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
@@ -120,14 +195,19 @@ const PostForm = ({initialData = null, mode = 'create'}) => {
         },
         clipboard: {
             matchVisual: false
-        }
+        },
+        imageResize: {
+            parchment: Quill.import('parchment'),
+            modules: ['Resize', 'DisplaySize']
+        },
     }), []);
 
     const formats = [
         'header',
         'bold', 'italic', 'underline', 'strike', 'blockquote',
         'list', 'indent',
-        'link', 'image'
+        'link', 'image',
+        'align'
     ];
 
     // 폼 제출 핸들러 (모드에 따라 다른 동작)
@@ -142,7 +222,8 @@ const PostForm = ({initialData = null, mode = 'create'}) => {
         setError('');
 
         try {
-            const postData = {title, content};
+            const imageIds = uploadedImages.map(img => img.id);
+            const postData = {title, content, imageIds};
 
             if (mode === 'edit' && initialData?.id) {
                 // 수정 모드
@@ -157,6 +238,7 @@ const PostForm = ({initialData = null, mode = 'create'}) => {
             }
         } catch (err) {
             setError(`게시글 ${mode === 'edit' ? '수정' : '등록'}에 실패했습니다.`);
+            console.log(err);
         } finally {
             setLoading(false);
         }
@@ -166,7 +248,7 @@ const PostForm = ({initialData = null, mode = 'create'}) => {
     const handleContentChange = (value) => {
         const currentImages = extractImagesFromHTML(value);
         const deletedImages = uploadedImages.filter(
-            uploadedImg => !currentImages.some(curImg => curImg.url === uploadedImg.url)
+            uploadedImg => !currentImages.some(curImg => curImg.url === uploadedImg.fileUrl)
         );
 
         deletedImages.forEach(async (img) => {

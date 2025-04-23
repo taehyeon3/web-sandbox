@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backendboard.domain.user.dto.UserInfoResponse;
 import com.backendboard.domain.user.dto.UserNicknameUpdateRequest;
 import com.backendboard.domain.user.dto.UserNicknameUpdateResponse;
-import com.backendboard.domain.user.dto.UserReadResponse;
 import com.backendboard.domain.user.service.UserService;
 import com.backendboard.global.error.dto.ErrorResponse;
 import com.backendboard.global.security.dto.CustomUserDetails;
@@ -33,20 +33,18 @@ public class UserController {
 	private final UserService userService;
 
 	@Operation(
-		summary = "유저 보기 API",
-		description = "유저의 정보를 보여줍니다.",
+		summary = "내 정보 보기 API",
+		description = "내 정보를 보여줍니다.",
 		security = {}
 	)
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "200 성공",
 			content = @Content(
-				mediaType = "application/json", schema = @Schema(implementation = UserReadResponse.class))),
-		@ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+				mediaType = "application/json", schema = @Schema(implementation = UserInfoResponse.class))),
 	})
-	@GetMapping("/{userId}")
-	public ResponseEntity<UserReadResponse> readUser(@PathVariable Long userId) {
-		UserReadResponse response = userService.getUser(userId);
+	@GetMapping
+	public ResponseEntity<UserInfoResponse> getInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+		UserInfoResponse response = userService.getInfo(customUserDetails.getId());
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
