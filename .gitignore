@@ -1,2 +1,4 @@
 docker-compose.yml
 /nginx
+/ngrinder-controller
+/ngrinder-agent
