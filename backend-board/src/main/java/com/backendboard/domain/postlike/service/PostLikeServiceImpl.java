@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.backendboard.domain.postlike.dto.PostLikeCountResponse;
 import com.backendboard.domain.postlike.dto.PostLikeStatusResponse;
 import com.backendboard.domain.postlike.entity.PostLike;
+import com.backendboard.domain.postlike.repository.PostLikeRedisRepository;
 import com.backendboard.domain.postlike.repository.PostLikeRepository;
 import com.backendboard.domain.user.entity.User;
 import com.backendboard.domain.user.repository.UserRepository;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PostLikeServiceImpl implements PostLikeService {
+	private final PostLikeRedisRepository postLikeRedisRepository;
 	private final PostLikeRepository postLikeRepository;
 	private final UserRepository userRepository;
 
@@ -41,7 +43,13 @@ public class PostLikeServiceImpl implements PostLikeService {
 
 	@Override
 	public PostLikeCountResponse getLikeCount(Long postId) {
-		Long count = postLikeRepository.countByPostId(postId);
+		String postIdKey = postId.toString();
+		Long count = postLikeRedisRepository.getCount(postIdKey);
+
+		if (count == null) {
+			count = postLikeRepository.countByPostId(postId);
+			postLikeRedisRepository.save(postIdKey, count);
+		}
 		return PostLikeCountResponse.toDto(count);
 	}
 }
