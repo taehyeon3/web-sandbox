@@ -1,5 +1,6 @@
 package com.backendboard.domain.postlike.repository;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,7 +19,7 @@ public class PostLikeRedisRepositoryImpl implements PostLikeRedisRepository {
 
 	@Override
 	public Long getCount(String postId) {
-		return Optional.of(redisTemplate.opsForHash().get(KEY, postId))
+		return Optional.ofNullable(redisTemplate.opsForHash().get(KEY, postId))
 			.map(value -> ((Number)value).longValue())
 			.orElse(null);
 	}
@@ -30,6 +31,11 @@ public class PostLikeRedisRepositoryImpl implements PostLikeRedisRepository {
 
 	@Override
 	public void delete() {
+		redisTemplate.delete(KEY);
+	}
 
+	@Override
+	public Map<Object, Object> getEntries() {
+		return redisTemplate.opsForHash().entries(KEY);
 	}
 }
