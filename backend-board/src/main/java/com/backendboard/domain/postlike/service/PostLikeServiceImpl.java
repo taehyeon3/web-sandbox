@@ -26,11 +26,15 @@ public class PostLikeServiceImpl implements PostLikeService {
 	public PostLikeStatusResponse toggleLike(Long authUserId, Long postId) {
 		User user = userRepository.getByAuthUserId(authUserId);
 		boolean isLiked = postLikeRepository.deleteByUserIdAndPostId(user.getId(), postId) == 0;
+		String postIdKey = postId.toString();
+		long delta = -1L;
 
 		if (isLiked) {
 			PostLike postLike = PostLike.create(user.getId(), postId);
 			postLikeRepository.save(postLike);
+			delta = 1L;
 		}
+		postLikeRedisRepository.incrementCount(postIdKey, delta);
 		return PostLikeStatusResponse.toDto(isLiked);
 	}
 

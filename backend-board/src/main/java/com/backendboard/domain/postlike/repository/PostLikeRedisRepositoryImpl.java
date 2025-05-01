@@ -36,4 +36,9 @@ public class PostLikeRedisRepositoryImpl implements PostLikeRedisRepository {
 	public Map<Object, Object> getEntries() {
 		return redisTemplate.opsForHash().entries(KEY);
 	}
+
+	@Override
+	public void incrementCount(String postId, Long delta) {
+		redisTemplate.opsForHash().increment(KEY, postId, delta);
+	}
 }
