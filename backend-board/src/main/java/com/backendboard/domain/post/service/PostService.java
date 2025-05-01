@@ -20,4 +20,6 @@ public interface PostService {
 	void deletePost(Long postId, Long authUserId);
 
 	Slice<PostSliceResponse> getPostsSlice(Pageable pageable);
+
+	void incrementViewCount(Long postId);
 }

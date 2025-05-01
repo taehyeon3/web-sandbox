@@ -1,4 +1,4 @@
-package com.backendboard.domain.postlike.repository;
+package com.backendboard.domain.post.respository;
 
 import java.util.Map;
 import java.util.Optional;
@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class PostLikeRedisRepositoryImpl implements PostLikeRedisRepository {
-	private static final String KEY = "post:like";
+public class ViewCountRedisRepositoryImpl implements ViewCountRedisRepository {
+	private static final String KEY = "post:view:count";
 
 	private final RedisTemplate<String, Object> redisTemplate;
 
@@ -23,8 +23,8 @@ public class PostLikeRedisRepositoryImpl implements PostLikeRedisRepository {
 	}
 
 	@Override
-	public void save(String postId, Long likeCount) {
-		redisTemplate.opsForHash().put(KEY, postId, likeCount);
+	public void save(String postId, Long viewCount) {
+		redisTemplate.opsForHash().put(KEY, postId, viewCount);
 	}
 
 	@Override

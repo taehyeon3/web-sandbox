@@ -113,4 +113,9 @@ public class PostServiceImpl implements PostService {
 			throw new CustomException(CustomError.POST_NOT_AUTHOR);
 		}
 	}
+
+	@Override
+	public void incrementViewCount(Long postId) {
+		
+	}
 }
