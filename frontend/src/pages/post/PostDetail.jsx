@@ -35,35 +35,42 @@ const PostDetail = () => {
         setIsLoggedIn(!!user && !!accessToken);
     }, []);
 
+    // 1. 게시글 상세(조회수 포함) - 한 번만 호출
     useEffect(() => {
         api.get(`/posts/${id}`)
             .then(res => {
                 if (res.status !== 200)
                     throw new Error('게시글을 불러올 수 없습니다.');
-                return res.data;
-            })
-            .then(data => {
-                setPost(data);
-                api.get(`/post-likes/${id}/count`).then(res => {
-                    if (res.status !== 200) {
-                        throw new Error('좋아요 상태를 불러올 수 없습니다.');
-                    }
-                    setLikeCount(res.data.count);
-                })
-
-                // 로그인한 경우 좋아요 상태 확인
-                if (isLoggedIn) {
-                    api.get(`/post-likes/${id}/status`).then(res => {
-                        if (res.status !== 200) {
-                            throw new Error('좋아요 상태를 불러올 수 없습니다.');
-                        }
-                        setIsLiked(res.data.liked);
-                    })
-                    // 좋아요 상태 확인 로직 추가
-                }
+                setPost(res.data);
             })
             .catch(err => setError(err.message))
             .finally(() => setLoading(false));
+    }, [id]);
+
+    // 2. 좋아요 개수는 id만 의존 (로그인 상관없이 보여주려면)
+    useEffect(() => {
+        api.get(`/post-likes/${id}/count`)
+            .then(res => {
+                if (res.status !== 200)
+                    throw new Error('좋아요 개수를 불러올 수 없습니다.');
+                setLikeCount(res.data.count);
+            })
+            .catch(err => setError(err.message));
+    }, [id]);
+
+    // 3. 좋아요 상태는 로그인 상태와 id에 따라 호출
+    useEffect(() => {
+        if (isLoggedIn) {
+            api.get(`/post-likes/${id}/status`)
+                .then(res => {
+                    if (res.status !== 200)
+                        throw new Error('좋아요 상태를 불러올 수 없습니다.');
+                    setIsLiked(res.data.liked);
+                })
+                .catch(err => setError(err.message));
+        } else {
+            setIsLiked(false); // 로그아웃 시 상태 초기화
+        }
     }, [id, isLoggedIn]);
 
     // 댓글 불러오기
