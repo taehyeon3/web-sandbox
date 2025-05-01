@@ -84,9 +84,8 @@ public class PostServiceImpl implements PostService {
 			incrementViewCount(postId);
 		}
 
-		Long viewCount = post.getViewCount() + viewCountRedisRepository.getIncrementCount(postId.toString());
 		List<PostImage> images = postImageRepository.findByPostId(postId);
-		return PostReadResponse.toDto(post, user.getNickname(), images, viewCount);
+		return PostReadResponse.toDto(post, user.getNickname(), images);
 	}
 
 	private void incrementViewCount(Long postId) {

@@ -8,6 +8,4 @@ public interface ViewCountRedisRepository {
 	Map<Object, Object> getEntries();
 
 	void incrementCount(String postId);
-
-	Long getIncrementCount(String postId);
 }

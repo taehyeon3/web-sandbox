@@ -1,7 +1,6 @@
 package com.backendboard.domain.post.respository;
 
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -28,12 +27,5 @@ public class ViewCountRedisRepositoryImpl implements ViewCountRedisRepository {
 	@Override
 	public void incrementCount(String postId) {
 		redisTemplate.opsForHash().increment(KEY, postId, 1);
-	}
-
-	@Override
-	public Long getIncrementCount(String postId) {
-		return Optional.ofNullable(redisTemplate.opsForHash().get(KEY, postId))
-			.map(value -> ((Number)value).longValue())
-			.orElse(0L);
 	}
 }
