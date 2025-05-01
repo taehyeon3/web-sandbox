@@ -98,8 +98,13 @@ public class PostController {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
 	@GetMapping("/{postId}")
-	public ResponseEntity<PostReadResponse> readPost(@PathVariable Long postId) {
-		PostReadResponse response = postService.getPost(postId);
+	public ResponseEntity<PostReadResponse> readPost(@PathVariable Long postId,
+		@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+		Long currentAuthUserId = null;
+		if (customUserDetails != null) {
+			currentAuthUserId = customUserDetails.getId();
+		}
+		PostReadResponse response = postService.getPost(postId, currentAuthUserId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 

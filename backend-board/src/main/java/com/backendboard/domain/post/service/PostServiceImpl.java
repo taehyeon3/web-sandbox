@@ -19,6 +19,7 @@ import com.backendboard.domain.post.dto.PostUpdateRequest;
 import com.backendboard.domain.post.dto.PostUpdateResponse;
 import com.backendboard.domain.post.entity.Post;
 import com.backendboard.domain.post.respository.PostRepository;
+import com.backendboard.domain.post.respository.ViewCountRedisRepository;
 import com.backendboard.domain.postimage.entity.PostImage;
 import com.backendboard.domain.postimage.repository.PostImageRepository;
 import com.backendboard.domain.user.entity.User;
@@ -35,6 +36,7 @@ public class PostServiceImpl implements PostService {
 	private final PostRepository postRepository;
 	private final UserRepository userRepository;
 	private final PostImageRepository postImageRepository;
+	private final ViewCountRedisRepository viewCountRedisRepository;
 
 	@Transactional
 	@Override
@@ -73,13 +75,23 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostReadResponse getPost(Long postId) {
+	public PostReadResponse getPost(Long postId, Long currentAuthUserId) {
 		Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(CustomError.POST_NOT_FOUND));
 		User user = userRepository.findById(post.getUserId())
 			.orElseThrow(() -> new CustomException(CustomError.USER_NOT_FOUND));
 
+		if (user.getAuthUser().getId() != currentAuthUserId) {
+			incrementViewCount(postId);
+		}
+
+		Long viewCount = post.getViewCount() + viewCountRedisRepository.getIncrementCount(postId.toString());
 		List<PostImage> images = postImageRepository.findByPostId(postId);
-		return PostReadResponse.toDto(post, user.getNickname(), images);
+		return PostReadResponse.toDto(post, user.getNickname(), images, viewCount);
+	}
+
+	private void incrementViewCount(Long postId) {
+		String postIdKey = postId.toString();
+		viewCountRedisRepository.incrementCount(postIdKey);
 	}
 
 	@Transactional
@@ -112,10 +124,5 @@ public class PostServiceImpl implements PostService {
 		if (post.getUserId() != user.getId()) {
 			throw new CustomException(CustomError.POST_NOT_AUTHOR);
 		}
-	}
-
-	@Override
-	public void incrementViewCount(Long postId) {
-		
 	}
 }

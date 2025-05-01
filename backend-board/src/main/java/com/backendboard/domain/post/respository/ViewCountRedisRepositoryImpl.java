@@ -16,18 +16,6 @@ public class ViewCountRedisRepositoryImpl implements ViewCountRedisRepository {
 	private final RedisTemplate<String, Object> redisTemplate;
 
 	@Override
-	public Long getCount(String postId) {
-		return Optional.ofNullable(redisTemplate.opsForHash().get(KEY, postId))
-			.map(value -> ((Number)value).longValue())
-			.orElse(null);
-	}
-
-	@Override
-	public void save(String postId, Long viewCount) {
-		redisTemplate.opsForHash().put(KEY, postId, viewCount);
-	}
-
-	@Override
 	public void delete() {
 		redisTemplate.delete(KEY);
 	}
@@ -35,5 +23,17 @@ public class ViewCountRedisRepositoryImpl implements ViewCountRedisRepository {
 	@Override
 	public Map<Object, Object> getEntries() {
 		return redisTemplate.opsForHash().entries(KEY);
+	}
+
+	@Override
+	public void incrementCount(String postId) {
+		redisTemplate.opsForHash().increment(KEY, postId, 1);
+	}
+
+	@Override
+	public Long getIncrementCount(String postId) {
+		return Optional.ofNullable(redisTemplate.opsForHash().get(KEY, postId))
+			.map(value -> ((Number)value).longValue())
+			.orElse(0L);
 	}
 }
