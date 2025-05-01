@@ -15,7 +15,7 @@ public interface PostService {
 
 	PostUpdateResponse updatePost(PostUpdateRequest request, Long postId, Long authUserId);
 
-	PostReadResponse getPost(Long postId);
+	PostReadResponse getPost(Long postId, Long currentAuthUserId);
 
 	void deletePost(Long postId, Long authUserId);
 

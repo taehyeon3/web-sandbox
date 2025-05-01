@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.backendboard.domain.post.respository.ViewCountRedisRepository;
 import com.backendboard.domain.postlike.repository.PostLikeRedisRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PostScheduler {
 	private static final String UPDATE_LIKE_COUNT_SQL = "UPDATE post SET like_count = ? WHERE id = ?";
+	private static final String UPDATE_VIEW_COUNT_SQL = "UPDATE post SET view_count = view_count + ? WHERE id = ?";
 
 	private final PostLikeRedisRepository postLikeRedisRepository;
+	private final ViewCountRedisRepository viewCountRedisRepository;
 	private final JdbcTemplate jdbcTemplate;
 
-	@Scheduled(fixedDelay = 300_000)
+	@Scheduled(fixedDelay = 180_000)
 	public void syncLikeCount() {
 		Map<Object, Object> entries = postLikeRedisRepository.getEntries();
 		List<Object[]> batchArgs = new ArrayList<>();
@@ -35,5 +38,20 @@ public class PostScheduler {
 
 		jdbcTemplate.batchUpdate(UPDATE_LIKE_COUNT_SQL, batchArgs);
 		postLikeRedisRepository.delete();
+	}
+
+	@Scheduled(fixedDelay = 60_000)
+	public void syncViewCount() {
+		Map<Object, Object> entries = viewCountRedisRepository.getEntries();
+		List<Object[]> batchArgs = new ArrayList<>();
+
+		for (Map.Entry<Object, Object> entry : entries.entrySet()) {
+			String postId = (String)entry.getKey();
+			long viewCount = ((Number)entry.getValue()).longValue();
+			batchArgs.add(new Object[] {viewCount, Long.valueOf(postId)});
+		}
+
+		jdbcTemplate.batchUpdate(UPDATE_VIEW_COUNT_SQL, batchArgs);
+		viewCountRedisRepository.delete();
 	}
 }

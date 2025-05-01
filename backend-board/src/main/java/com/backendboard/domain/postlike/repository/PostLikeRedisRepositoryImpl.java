@@ -7,9 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class PostLikeRedisRepositoryImpl implements PostLikeRedisRepository {
@@ -37,5 +35,10 @@ public class PostLikeRedisRepositoryImpl implements PostLikeRedisRepository {
 	@Override
 	public Map<Object, Object> getEntries() {
 		return redisTemplate.opsForHash().entries(KEY);
+	}
+
+	@Override
+	public void incrementCount(String postId, Long delta) {
+		redisTemplate.opsForHash().increment(KEY, postId, delta);
 	}
 }

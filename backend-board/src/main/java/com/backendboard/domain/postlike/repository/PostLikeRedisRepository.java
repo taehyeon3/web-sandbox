@@ -10,4 +10,6 @@ public interface PostLikeRedisRepository {
 	void delete();
 
 	Map<Object, Object> getEntries();
+
+	void incrementCount(String postId, Long delta);
 }
