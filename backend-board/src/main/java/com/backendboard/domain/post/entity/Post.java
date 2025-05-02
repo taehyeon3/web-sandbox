@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 	indexes = {
 		@Index(name = "idx_like_count", columnList = "likeCount"),
 		@Index(name = "idx_view_count", columnList = "viewCount"),
-		@Index(name = "idx_create_date", columnList = "createDate")
+		@Index(name = "idx_created_date", columnList = "createdDate")
 	}
 )
 public class Post extends BaseEntity {

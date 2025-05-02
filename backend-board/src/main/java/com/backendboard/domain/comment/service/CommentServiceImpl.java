@@ -1,10 +1,5 @@
 package com.backendboard.domain.comment.service;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -17,6 +12,7 @@ import com.backendboard.domain.comment.dto.CommentSliceResponse;
 import com.backendboard.domain.comment.dto.CommentUpdateRequest;
 import com.backendboard.domain.comment.dto.CommentUpdateResponse;
 import com.backendboard.domain.comment.entity.Comment;
+import com.backendboard.domain.comment.repository.CommentQueryRepository;
 import com.backendboard.domain.comment.repository.CommentRepository;
 import com.backendboard.domain.user.entity.User;
 import com.backendboard.domain.user.repository.UserRepository;
@@ -29,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
+	private final CommentQueryRepository commentQueryRepository;
 	private final CommentRepository commentRepository;
 	private final UserRepository userRepository;
 
@@ -56,11 +53,7 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	public CommentReadResponse getComment(Long commentId) {
-		Comment comment = commentRepository.findById(commentId)
-			.orElseThrow(() -> new CustomException(CustomError.COMMENT_NOT_FOUND));
-		User author = userRepository.findById(comment.getUserId())
-			.orElseThrow(() -> new CustomException(CustomError.USER_NOT_FOUND));
-		return CommentReadResponse.toDto(comment, author.getNickname());
+		return commentQueryRepository.findCommentReadResponse(commentId);
 	}
 
 	@Transactional
@@ -77,17 +70,7 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	public Slice<CommentSliceResponse> getCommetsSlice(Long postId, Pageable pageable) {
-		Slice<Comment> comments = commentRepository.findByPostIdAndDeleted(postId, false, pageable);
-
-		Set<Long> userIds = comments.stream().map(Comment::getUserId).collect(Collectors.toSet());
-
-		Map<Long, User> userMap = userRepository.findAllById(userIds)
-			.stream().collect(Collectors.toMap(User::getId, Function.identity()));
-
-		return comments.map(comment -> {
-			User user = userMap.get(comment.getUserId());
-			return CommentSliceResponse.toDto(comment, user.getNickname());
-		});
+		return commentQueryRepository.findCommentSliceResponse(postId, false, pageable);
 	}
 
 	public void validateAuthor(Comment comment, User user) {

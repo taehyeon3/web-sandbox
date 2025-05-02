@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
 	indexes = {
-		@Index(name = "idx_create_date", columnList = "createDate")
+		@Index(name = "idx_created_date", columnList = "createdDate")
 	}
 )
 public class Comment extends BaseEntity {
