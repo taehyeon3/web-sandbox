@@ -21,7 +21,8 @@ import lombok.NoArgsConstructor;
 @Table(
 	indexes = {
 		@Index(name = "idx_like_count", columnList = "likeCount"),
-		@Index(name = "idx_view_count", columnList = "viewCount")
+		@Index(name = "idx_view_count", columnList = "viewCount"),
+		@Index(name = "idx_create_date", columnList = "createDate")
 	}
 )
 public class Post extends BaseEntity {
