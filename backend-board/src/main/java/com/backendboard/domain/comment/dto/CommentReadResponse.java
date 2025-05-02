@@ -3,6 +3,7 @@ package com.backendboard.domain.comment.dto;
 import java.time.LocalDateTime;
 
 import com.backendboard.domain.comment.entity.Comment;
+import com.querydsl.core.annotations.QueryProjection;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -30,9 +31,9 @@ public class CommentReadResponse {
 	private final LocalDateTime lastModifiedDate;
 
 	@Builder
-	private CommentReadResponse(Long id, Long postId, String author, String content, LocalDateTime createdDate,
-		LocalDateTime lastModifiedDate
-	) {
+	@QueryProjection
+	public CommentReadResponse(Long id, Long postId, String author, String content, LocalDateTime createdDate,
+		LocalDateTime lastModifiedDate) {
 		this.id = id;
 		this.postId = postId;
 		this.author = author;

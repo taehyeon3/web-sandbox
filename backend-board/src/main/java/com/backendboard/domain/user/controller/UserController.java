@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -62,10 +61,10 @@ public class UserController {
 		@ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 	})
-	@PatchMapping("/{userId}/nickname")
-	public ResponseEntity<UserNicknameUpdateResponse> updateNickname(@PathVariable Long userId,
+	@PatchMapping("/nickname")
+	public ResponseEntity<UserNicknameUpdateResponse> updateNickname(
 		@AuthenticationPrincipal CustomUserDetails customUserDetails, UserNicknameUpdateRequest request) {
-		UserNicknameUpdateResponse response = userService.updateNickname(request, userId, customUserDetails.getId());
+		UserNicknameUpdateResponse response = userService.updateNickname(request, customUserDetails.getId());
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }

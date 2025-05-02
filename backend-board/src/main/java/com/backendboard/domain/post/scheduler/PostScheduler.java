@@ -25,7 +25,7 @@ public class PostScheduler {
 	private final ViewCountRedisRepository viewCountRedisRepository;
 	private final JdbcTemplate jdbcTemplate;
 
-	@Scheduled(fixedDelay = 180_000)
+	@Scheduled(fixedDelay = 60_000)
 	public void syncLikeCount() {
 		Map<Object, Object> entries = postLikeRedisRepository.getEntries();
 		List<Object[]> batchArgs = new ArrayList<>();

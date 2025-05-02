@@ -27,15 +27,13 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserNicknameUpdateResponse updateNickname(UserNicknameUpdateRequest request, Long userId, Long authUserId) {
-		validateUser(userId, authUserId);
-
+	public UserNicknameUpdateResponse updateNickname(UserNicknameUpdateRequest request, Long authUserId) {
+		User user = userRepository.getByAuthUserId(authUserId);
 		//공백 제거
 		String updateNickname = request.getNickname().replaceAll("\\p{Z}", "");
 
 		validateDuplicationNickname(updateNickname);
 
-		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(CustomError.USER_NOT_FOUND));
 		user.updateNickname(updateNickname);
 		return UserNicknameUpdateResponse.toDto(user);
 	}
@@ -43,12 +41,6 @@ public class UserServiceImpl implements UserService {
 	private void validateDuplicationNickname(String nickname) {
 		if (userRepository.existsByNickname(nickname)) {
 			throw new CustomException(CustomError.USER_DUPLICATION_NICKNAME);
-		}
-	}
-
-	public void validateUser(Long userId, Long authUserId) {
-		if (userId != authUserId) {
-			throw new CustomException(CustomError.AUTH_INVALID_USER);
 		}
 	}
 }

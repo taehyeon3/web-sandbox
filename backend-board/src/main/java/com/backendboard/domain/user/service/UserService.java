@@ -7,5 +7,5 @@ import com.backendboard.domain.user.dto.UserNicknameUpdateResponse;
 public interface UserService {
 	UserInfoResponse getInfo(Long authUserId);
 
-	UserNicknameUpdateResponse updateNickname(UserNicknameUpdateRequest request, Long userId, Long authUserId);
+	UserNicknameUpdateResponse updateNickname(UserNicknameUpdateRequest request, Long authUserId);
 }

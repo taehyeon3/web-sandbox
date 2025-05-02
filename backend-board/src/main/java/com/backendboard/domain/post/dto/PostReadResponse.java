@@ -56,15 +56,14 @@ public class PostReadResponse {
 	}
 
 	@Builder
-
-	public static PostReadResponse toDto(Post post, String author, List<PostImage> images, Long viewCount) {
+	public static PostReadResponse toDto(Post post, String author, List<PostImage> images) {
 		return PostReadResponse.builder()
 			.id(post.getId())
 			.author(author)
 			.title(post.getTitle())
 			.content(post.getContent())
 			.likeCount(post.getLikeCount())
-			.viewCount(viewCount)
+			.viewCount(post.getViewCount())
 			.images(images.stream().map(PostImageReadResponse::toDto).toList())
 			.createdDate(post.getCreatedDate())
 			.lastModifiedDate(post.getLastModifiedDate())

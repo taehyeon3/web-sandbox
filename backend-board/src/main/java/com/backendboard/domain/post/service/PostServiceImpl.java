@@ -1,10 +1,6 @@
 package com.backendboard.domain.post.service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -18,6 +14,7 @@ import com.backendboard.domain.post.dto.PostSliceResponse;
 import com.backendboard.domain.post.dto.PostUpdateRequest;
 import com.backendboard.domain.post.dto.PostUpdateResponse;
 import com.backendboard.domain.post.entity.Post;
+import com.backendboard.domain.post.respository.PostQueryRepository;
 import com.backendboard.domain.post.respository.PostRepository;
 import com.backendboard.domain.post.respository.ViewCountRedisRepository;
 import com.backendboard.domain.postimage.entity.PostImage;
@@ -37,6 +34,7 @@ public class PostServiceImpl implements PostService {
 	private final UserRepository userRepository;
 	private final PostImageRepository postImageRepository;
 	private final ViewCountRedisRepository viewCountRedisRepository;
+	private final PostQueryRepository postQueryRepository;
 
 	@Transactional
 	@Override
@@ -84,9 +82,8 @@ public class PostServiceImpl implements PostService {
 			incrementViewCount(postId);
 		}
 
-		Long viewCount = post.getViewCount() + viewCountRedisRepository.getIncrementCount(postId.toString());
 		List<PostImage> images = postImageRepository.findByPostId(postId);
-		return PostReadResponse.toDto(post, user.getNickname(), images, viewCount);
+		return PostReadResponse.toDto(post, user.getNickname(), images);
 	}
 
 	private void incrementViewCount(Long postId) {
@@ -107,17 +104,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public Slice<PostSliceResponse> getPostsSlice(Pageable pageable) {
-		Slice<Post> posts = postRepository.findByDeleted(false, pageable);
-
-		Set<Long> userIds = posts.stream().map(Post::getUserId).collect(Collectors.toSet());
-
-		Map<Long, User> userMap = userRepository.findAllById(userIds)
-			.stream().collect(Collectors.toMap(User::getId, Function.identity()));
-
-		return posts.map(post -> {
-			User user = userMap.get(post.getUserId());
-			return PostSliceResponse.toDto(post, user.getNickname());
-		});
+		return postQueryRepository.findPostSliceResponse(false, pageable);
 	}
 
 	public void validateAuthor(Post post, User user) {
