@@ -57,8 +57,8 @@ public class CommentQueryRepository {
 	public Slice<CommentSliceResponse> findCommentSliceResponse(Long postId, boolean deleted, Pageable pageable) {
 		QComment comment = QComment.comment;
 		QUser user = QUser.user;
-		List<OrderSpecifier<?>> orderSpecifiers = getOrderSpecifiers(pageable, comment);
 		boolean hasNext = false;
+		List<OrderSpecifier<?>> orderSpecifiers = getOrderSpecifiers(pageable, comment);
 
 		List<CommentSliceResponse> content = queryFactory
 			.select(new QCommentSliceResponse(
@@ -90,10 +90,12 @@ public class CommentQueryRepository {
 
 	private List<OrderSpecifier<?>> getOrderSpecifiers(Pageable pageable, QComment comment) {
 		List<OrderSpecifier<?>> orders = new ArrayList<>();
+
 		for (Sort.Order order : pageable.getSort()) {
 			PathBuilder<?> entityPath = new PathBuilder<>(comment.getType(), comment.getMetadata());
 			orders.add(
-				new OrderSpecifier(order.isAscending() ? Order.ASC : Order.DESC, entityPath.get(order.getProperty())));
+				new OrderSpecifier(order.isAscending() ? Order.ASC : Order.DESC, entityPath.get(order.getProperty()))
+			);
 		}
 		return orders;
 	}

@@ -3,6 +3,7 @@ package com.backendboard.domain.post.dto;
 import java.time.LocalDateTime;
 
 import com.backendboard.domain.post.entity.Post;
+import com.querydsl.core.annotations.QueryProjection;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -36,7 +37,8 @@ public class PostSliceResponse {
 	private final LocalDateTime lastModifiedDate;
 
 	@Builder
-	private PostSliceResponse(Long id, String author, String title, String content, Long likeCount, Long viewCount,
+	@QueryProjection
+	public PostSliceResponse(Long id, String author, String title, String content, Long likeCount, Long viewCount,
 		LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
 		this.id = id;
 		this.author = author;
