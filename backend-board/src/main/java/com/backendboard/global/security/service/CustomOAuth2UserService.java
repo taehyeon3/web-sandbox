@@ -1,7 +1,5 @@
 package com.backendboard.global.security.service;
 
-import java.util.UUID;
-
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -35,6 +33,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		OAuth2User oAuth2User = super.loadUser(userRequest);
 
 		System.out.println("oAuth2User = " + oAuth2User);
+		System.out.println("oAuth2User.getAttributes() = " + oAuth2User.getAttributes());
 
 		String registrationId = userRequest.getClientRegistration().getRegistrationId();
 		OAuth2Response oAuth2Response = null;
@@ -45,14 +44,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			return null;
 		}
 
-		String username = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
+		String username = oAuth2Response.getProvider() + "#" + oAuth2Response.getProviderId();
 		String name = oAuth2Response.getName();
-		AuthUser authUser = authUserRepository.findByUsername(username);
+		AuthUser authUser = authUserRepository.findObjectByUsername(username);
 		OAuth2UserDto oAuth2UserDto = null;
 
 		if (authUser == null) {
 			AuthUser newAuthUser = AuthUser.create(username, "", UserRole.USER);
-			User newUser = newAuthUser.createUser(name, name + UUID.randomUUID());
+			User newUser = newAuthUser.createUser(name, name + "#" + oAuth2Response.getProvider());
 			authUserRepository.save(newAuthUser);
 			userRepository.save(newUser);
 			oAuth2UserDto = new OAuth2UserDto(username, name, UserRole.USER);

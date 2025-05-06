@@ -115,10 +115,19 @@ public class JwtUtil {
 			.orElse(null);
 	}
 
+	public Cookie createAccessCookie(String token) {
+		Cookie cookie = new Cookie("access", token);
+		cookie.setMaxAge((int)(expiredAccessTokenTime / 1000));
+		cookie.setHttpOnly(false);
+		cookie.setPath("/");
+		return cookie;
+	}
+
 	public Cookie createRefreshCookie(String token) {
 		Cookie cookie = new Cookie("refresh", token);
 		cookie.setMaxAge((int)(expiredRefreshTokenTime / 1000));
 		cookie.setHttpOnly(true);
+		cookie.setPath("/");
 		return cookie;
 	}
 
