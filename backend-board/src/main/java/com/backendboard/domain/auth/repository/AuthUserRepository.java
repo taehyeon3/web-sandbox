@@ -11,5 +11,7 @@ import com.backendboard.domain.auth.entity.AuthUser;
 public interface AuthUserRepository extends JpaRepository<AuthUser, Long> {
 	boolean existsByUsername(String username);
 
+	AuthUser findObjectByUsername(String username);
+
 	Optional<AuthUser> findByUsername(String username);
 }
