@@ -42,7 +42,7 @@ const Login = () => {
                             name: response.data.name,
                             nickname: response.data.nickname
                         }));
-                        console.log('로그인 성공:');
+                        console.log('로그인 성공');
                         navigate('/');
                     } else {
                         console.log(`오류 발생: ${response.status}`);
@@ -52,9 +52,13 @@ const Login = () => {
                 console.error('로그인 실패');
                 setShowError(true);
             }
-            setShowError(false);
         }
         setValidated(true);
+    };
+
+    // 카카오 로그인 버튼 클릭 시 리다이렉트 함수
+    const handleKakaoLogin = () => {
+        window.location.href = 'http://localhost/api/oauth2/authorization/kakao';
     };
 
     return (
@@ -119,6 +123,16 @@ const Login = () => {
                                     className="potato-button w-100"
                                 >
                                     로그인
+                                </Button>
+
+                                <Button
+                                    variant="warning"
+                                    type="button"
+                                    className="w-100 mt-3"
+                                    onClick={handleKakaoLogin}
+                                    style={{backgroundColor: '#FEE500', color: '#000', border: 'none'}}
+                                >
+                                    카카오 계정으로 로그인
                                 </Button>
 
                                 <div className="text-center mt-3">

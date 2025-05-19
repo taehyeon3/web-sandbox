@@ -231,6 +231,20 @@ const PostDetail = () => {
         }
     };
 
+    // 게시글 삭제 핸들러
+    const handleDelete = async () => {
+        if (window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
+            try {
+                await api.delete(`/posts/${id}`);
+                alert('게시글이 삭제되었습니다.');
+                navigate('/posts'); // 게시글 목록으로 이동
+            } catch (err) {
+                console.error('게시글 삭제 중 오류 발생:', err);
+                alert('게시글 삭제에 실패했습니다.');
+            }
+        }
+    };
+
     // 댓글 작성자인지 확인
     const isCommentAuthor = (comment) => {
         return comment.author === nickname;
@@ -269,13 +283,22 @@ const PostDetail = () => {
             </div>
             <div className="mt-4 text-end">
                 {isPostAuthor() && (
-                    <button
-                        onClick={handleEdit}
-                        className="potato-btn"
-                        type="button"
-                    >
-                        수정하기
-                    </button>
+                    <>
+                        <button
+                            onClick={handleEdit}
+                            className="potato-btn me-2"
+                            type="button"
+                        >
+                            수정하기
+                        </button>
+                        <button
+                            onClick={handleDelete}
+                            className="potato-btn potato-btn-danger me-2"
+                            type="button"
+                        >
+                            삭제하기
+                        </button>
+                    </>
                 )}
                 <Link to="/posts" className="btn btn-outline-secondary">목록으로</Link>
             </div>

@@ -8,4 +8,14 @@ export default defineConfig({
         host: "0.0.0.0"
     },
     plugins: [react()],
+    build: {
+        chunkSizeWarningLimit: 1000
+    },
+    esbuild: {
+        tsconfigRaw: {
+            compilerOptions: {
+                experimentalDecorators: true
+            }
+        }
+    }
 })
