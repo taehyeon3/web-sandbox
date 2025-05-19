@@ -236,3 +236,18 @@
     justify-content: flex-end;
     margin-top: 8px;
 }
+
+button.potato-btn-danger {
+    background-color: whitesmoke;
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+button.potato-btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+.me-2 {
+    margin-right: 0.5rem;
+}
