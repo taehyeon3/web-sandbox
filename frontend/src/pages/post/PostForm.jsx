@@ -5,7 +5,7 @@ import 'react-quill-new/dist/quill.snow.css';
 import '../../style/PostCreate.css';
 import api from '../../api/axiosInstance.jsx';
 import {useNavigate} from 'react-router-dom';
-import ImageResize from 'quill-image-resize-module-react';
+import ImageResize from 'quill-image-resize';
 
 const BaseImage = Quill.import('formats/image');
 
@@ -34,11 +34,10 @@ class CustomImage extends BaseImage {
     }
 }
 
-Quill.register('formats/image', CustomImage, true);
-
 if (typeof window !== 'undefined') {
     window.Quill = Quill;
     Quill.register('modules/imageResize', ImageResize);
+    Quill.register('formats/image', CustomImage, true);
 }
 
 
