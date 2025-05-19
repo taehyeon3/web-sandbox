@@ -1,11 +1,67 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Card, Col, Container, Row} from 'react-bootstrap';
 import {Link, useNavigate} from 'react-router-dom';
 import LogoLink from "../components/LogoLink.jsx";
+import api from "../api/axiosInstance.jsx";
 
 const Home = () => {
-    const isLoggedIn = localStorage.getItem('user') !== null;
+    const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('user') !== null);
     const navigate = useNavigate();
+
+    // 쿠키에서 값을 가져오는 함수
+    const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    };
+
+    // 쿠키 삭제 함수
+    const deleteCookie = (name) => {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    };
+
+    useEffect(() => {
+        // 쿠키에서 accessToken 확인
+        const accessToken = getCookie('access');
+
+        if (accessToken) {
+            console.log('쿠키에서 accessToken을 찾았습니다.');
+
+            // Authorization 헤더에 토큰 추가
+            api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+            localStorage.setItem('accessToken', `Bearer ${accessToken}`);
+
+            // 사용자 정보 가져오기
+            api.get('users')
+                .then(response => {
+                    if (response.status === 200) {
+                        console.log("성공적으로 데이터를 가져왔습니다.");
+
+                        // 사용자 정보 localStorage에 저장
+                        localStorage.setItem('user', JSON.stringify({
+                            id: response.data.id,
+                            email: response.data.email, // 이메일 정보도 response에서 가져옴
+                            name: response.data.name,
+                            nickname: response.data.nickname
+                        }));
+
+                        // 로그인 상태 업데이트
+                        setIsLoggedIn(true);
+
+                        // 쿠키에서 accessToken 삭제
+                        deleteCookie('access');
+                        console.log('쿠키에서 accessToken을 삭제했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('사용자 정보를 가져오는 중 오류 발생:', error);
+                    // 오류 발생 시에도 쿠키 삭제
+                    deleteCookie('access');
+                });
+        }
+    }, []);
+
     return (
         <Container className="py-5">
             <Row className="justify-content-center">
