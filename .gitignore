@@ -3,3 +3,4 @@ docker-compose.yml
 /ngrinder-controller
 /ngrinder-agent
 /minikube
+**/application.yml
