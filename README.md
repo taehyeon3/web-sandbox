@@ -24,6 +24,10 @@
 
 <a><img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"></a>
 
+## 🗂️ ERD
+
+![스크린샷 2025-05-29 오전 12 01 20](https://github.com/user-attachments/assets/b810e6a1-2e6c-4afc-9f13-0d188ecadb24)
+
 ## 👨‍💻자기소개
 
 <table>
